@@ -1,0 +1,66 @@
+name: Klip paylas
+
+on:
+  push:
+    paths:
+      - "queue/*.json"
+  workflow_dispatch:
+    inputs:
+      job:
+        description: "queue/ altindaki is dosyasi (orn. queue/2026-11-17-eray.json)"
+        required: true
+
+concurrency:
+  group: clip-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Yeni is dosyalarini bul
+        id: jobs
+        run: |
+          if [ -n "${{ github.event.inputs.job }}" ]; then
+            files="${{ github.event.inputs.job }}"
+          else
+            before="${{ github.event.before }}"
+            if [ -z "$before" ] || [ "$before" = "0000000000000000000000000000000000000000" ] || ! git cat-file -e "$before" 2>/dev/null; then
+              files=$(git diff-tree --no-commit-id --name-only --diff-filter=A -r HEAD -- 'queue/*.json')
+            else
+              files=$(git diff --name-only --diff-filter=A "$before" "${{ github.sha }}" -- 'queue/*.json')
+            fi
+          fi
+          echo "files=$(echo $files | tr '\n' ' ')" >> "$GITHUB_OUTPUT"
+          echo "Islenecek: $files"
+
+      - uses: actions/setup-python@v5
+        if: steps.jobs.outputs.files != ''
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Kurulum
+        if: steps.jobs.outputs.files != ''
+        run: |
+          command -v ffmpeg >/dev/null || (sudo apt-get update -q && sudo apt-get install -y -q ffmpeg)
+          pip install -q -r requirements.txt
+
+      - name: Indir, edit et, yukle, sil
+        if: steps.jobs.outputs.files != ''
+        env:
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+          TIKTOK_CLIENT_KEY: ${{ secrets.TIKTOK_CLIENT_KEY }}
+          TIKTOK_CLIENT_SECRET: ${{ secrets.TIKTOK_CLIENT_SECRET }}
+          TIKTOK_REFRESH_TOKEN: ${{ secrets.TIKTOK_REFRESH_TOKEN }}
+          TIKTOK_AUTH_CODE: ${{ secrets.TIKTOK_AUTH_CODE }}
+          TIKTOK_REDIRECT_URI: ${{ secrets.TIKTOK_REDIRECT_URI }}
+          GH_PAT: ${{ secrets.GH_PAT }}
+        run: python -m clipbot run ${{ steps.jobs.outputs.files }}

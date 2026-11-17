@@ -137,3 +137,12 @@ sunucuyla değiştirmen yeterli. TikTok kısmı bundan etkilenmez.
 | "error.api.auth…" hatası | Seçtiğin cobalt sunucusu anahtar istiyor → listeden başka sunucu seç. |
 | Video yerine dosya/yazı kaydediliyor | 12/21/27. adımlarda doğru değişkene (`video_url` / `url`) bağlandığından emin ol. |
 | Gizli hesap / yaş kısıtlı video | Bu servisler giriş gerektiren içerikleri indiremez. |
+
+---
+
+# Klip Botu (Kick → YouTube Shorts + TikTok)
+
+`clipbot/` klasörü Kick kliplerini indirir, dikey formatta edit eder (üstte kamera, altta ekran),
+YouTube Shorts ve TikTok'a aynı anda yükler, sonra videoyu siler.
+GitHub Actions üzerinde `queue/` klasörüne eklenen her iş dosyası için çalışır.
+Kurulum için bkz. [docs/KURULUM.md](docs/KURULUM.md).

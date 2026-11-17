@@ -1,0 +1,26 @@
+{
+  "_aciklama": "cam/game: kaynak videoda [x, y, genislik, yukseklik] oranlari (0-1). cam null ise yuz algilama ile otomatik bulunur.",
+  "eray": {
+    "display": "Eray",
+    "kick": "eray",
+    "cam": [0.0, 0.0, 0.222, 0.219],
+    "game": null,
+    "tags": ["eray", "eray klip", "eray kick", "kick", "kick klip", "kngl", "komik anlar"],
+    "hashtags": ["#eray", "#kick", "#kngl"]
+  },
+  "ebonivon": {
+    "display": "Ebonivon",
+    "kick": "ebonivon",
+    "cam": null,
+    "game": null,
+    "tags": ["ebonivon", "ebonivon klip", "ebonivon kick", "kick", "kick klip", "komik anlar"],
+    "hashtags": ["#ebonivon", "#kick"]
+  },
+  "_default": {
+    "display": null,
+    "cam": null,
+    "game": null,
+    "tags": ["kick", "kick klip", "komik anlar"],
+    "hashtags": ["#kick"]
+  }
+}
