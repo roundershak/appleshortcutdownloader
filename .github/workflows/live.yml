@@ -10,7 +10,7 @@ on:
       dry_run: {description: "Yukleme yapma (test)", default: "false"}
       max_hours: {description: "Bu calismanin suresi (saat)", default: "5.6"}
       title_wait: {description: "Claude baslik bekleme (sn)", default: "240"}
-      bitis: {description: "Zincirin duracagi tarih (UTC, YYYY-MM-DD)", default: "2026-11-24"}
+      bitis: {description: "Zincirin duracagi tarih (UTC, YYYY-MM-DD)", default: "2026-11-30"}
 
 concurrency:
   group: live-${{ github.event.inputs.channel || 'eray' }}
@@ -30,7 +30,7 @@ jobs:
       DRY: ${{ github.event.inputs.dry_run || 'false' }}
       HOURS: ${{ github.event.inputs.max_hours || '5.6' }}
       TWAIT: ${{ github.event.inputs.title_wait || '240' }}
-      BITIS: ${{ github.event.inputs.bitis || '2026-11-24' }}
+      BITIS: ${{ github.event.inputs.bitis || '2026-11-30' }}
     steps:
       - uses: actions/checkout@v4
         with:

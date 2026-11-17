@@ -494,7 +494,9 @@ def main():
             else:
                 offline_since = offline_since or time.time()
                 if time.time() - offline_since > args.offline_stop_min * 60:
-                    log("yayin bitti"); jobs.put(None); th.join(timeout=900); return 0
+                    # Durma: yayin ara verdi; isleri bitir, zincir yeni calismada tekrar acilmasini bekler
+                    log("yayin kapali (ara?), bekleme moduna geciliyor")
+                    jobs.put(None); th.join(timeout=900); return 2
         if time.time() - last_state > 600:
             last_state = time.time()
             lr = det.rates(chat.win)[0] if chat.win else 0
