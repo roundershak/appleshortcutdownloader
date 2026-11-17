@@ -1,0 +1,75 @@
+name: Zamanli yukleme
+
+# hazir/ klasorundeki siradaki klibi yukler; gun icine yayar.
+# Saatler UTC: 09,12,15,18,21 = Turkiye 12,15,18,21,24
+on:
+  schedule:
+    - cron: "17 9,12,15,18,21 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: clip-publish
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  publish-next:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Siradaki klibi sec
+        id: pick
+        env:
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+        run: |
+          if [ -z "$YT_REFRESH_TOKEN" ]; then echo "YouTube secret'lari yok, atlaniyor"; exit 0; fi
+          f=$(ls hazir/*.json 2>/dev/null | sort | head -1)
+          echo "file=$f" >> "$GITHUB_OUTPUT"
+          echo "Secilen: ${f:-yok}"
+
+      - uses: actions/setup-python@v5
+        if: steps.pick.outputs.file != ''
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Kurulum
+        if: steps.pick.outputs.file != ''
+        run: |
+          command -v ffmpeg >/dev/null || (sudo apt-get update -q && sudo apt-get install -y -q ffmpeg)
+          pip install -q -r requirements.txt
+
+      - name: Indir, edit et, yukle, sil
+        id: run
+        if: steps.pick.outputs.file != ''
+        continue-on-error: true
+        env:
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+          TIKTOK_CLIENT_KEY: ${{ secrets.TIKTOK_CLIENT_KEY }}
+          TIKTOK_CLIENT_SECRET: ${{ secrets.TIKTOK_CLIENT_SECRET }}
+          TIKTOK_REFRESH_TOKEN: ${{ secrets.TIKTOK_REFRESH_TOKEN }}
+          TIKTOK_AUTH_CODE: ${{ secrets.TIKTOK_AUTH_CODE }}
+          TIKTOK_REDIRECT_URI: ${{ secrets.TIKTOK_REDIRECT_URI }}
+          GH_PAT: ${{ secrets.GH_PAT }}
+        run: python -m clipbot run "${{ steps.pick.outputs.file }}" | tee run.log
+
+      - name: Sonucu kaydet
+        if: steps.pick.outputs.file != ''
+        run: |
+          f="${{ steps.pick.outputs.file }}"
+          if [ "${{ steps.run.outcome }}" = "success" ]; then dest=yuklendi; else dest=hata; fi
+          mkdir -p "$dest"
+          name=$(basename "$f" .json)
+          git mv "$f" "$dest/$name.json"
+          grep '^\[sonuc\]' run.log > "$dest/$name.sonuc.txt" || true
+          git config user.name "klip-bot"
+          git config user.email "klip-bot@users.noreply.github.com"
+          git add -A "$dest"
+          git commit -m "$dest: $name"
+          git pull --rebase -q && git push
