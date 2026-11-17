@@ -1,0 +1,47 @@
+{
+ "id": "20261117-190223",
+ "score": 2.5,
+ "peak": 0.7,
+ "base": 0.2,
+ "hype": 0.05,
+ "rage": 0.02,
+ "chat": [
+  "KEKW",
+  "ASDKJASD"
+ ],
+ "speech": [
+  [
+   0.1,
+   "Yetim döven yeni bir hobi bulu abi."
+  ],
+  [
+   21.1,
+   "Mahalleyle işin olmasın."
+  ],
+  [
+   23.1,
+   "Ucuza yapılan hobiler var abi."
+  ],
+  [
+   28.4,
+   "Halledersin."
+  ],
+  [
+   29.4,
+   "Zeytin çekirdeğinden teslim yapmadım yok."
+  ],
+  [
+   33.9,
+   "Onu hiç duymadım."
+  ]
+ ],
+ "layout": "split",
+ "cam": [
+  0,
+  794,
+  480,
+  284
+ ],
+ "fallback_title": "eray yine olay çıkardı ĞPAŞSLDKAŞS",
+ "dur": 42.0
+}
