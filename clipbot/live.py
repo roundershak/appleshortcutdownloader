@@ -78,7 +78,8 @@ class Recorder:
         self.n += 1
         pl = self.dir / f"r{self.n}.m3u8"
         self.proc = subprocess.Popen(
-            ["ffmpeg", "-v", "error", "-i", self.url, "-map", "0:p:0", "-c", "copy", "-f", "hls",
+            ["ffmpeg", "-v", "error", "-i", self.url, "-map", "0:p:0:v", "-map", "0:p:0:a", "-sn", "-dn",
+             "-c", "copy", "-f", "hls",
              "-hls_time", "4", "-hls_list_size", "90", "-hls_flags", "delete_segments+program_date_time",
              "-hls_segment_filename", str(self.dir / f"r{self.n}_%06d.ts"), str(pl)])
         log("kayit basladi", pl.name)
@@ -450,6 +451,7 @@ def main():
             if ev:
                 jobs.put(ev)
         if not rec.alive():
+            time.sleep(min(60, 5 * rec.n))  # art arda hata olursa yavasla
             _, live, url, _ = channel_state(args.channel)
             if live and url:
                 offline_since = None
