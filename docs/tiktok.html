@@ -1,10 +1,14 @@
 <!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TikTok bağlantısı</title>
 <style>body{font-family:system-ui,sans-serif;max-width:680px;margin:40px auto;padding:0 16px;line-height:1.6;color:#222;background:#fff}
 code{display:block;word-break:break-all;background:#f1f3f4;padding:12px;border-radius:8px;font-size:15px}button{margin-top:12px;padding:10px 16px;font-size:16px}</style></head>
-<body><h1>TikTok yetki kodu</h1><div id="o">Kod bulunamadı.</div>
+<body><h1>TikTok yetki kodu</h1><div id="o"><p>1) TikTok Developers → Sandbox → Credentials'taki <b>Client key</b>'i yapıştır:</p>
+<input id="k" style="width:100%;padding:10px;font-size:16px" placeholder="Client key">
+<button onclick="go()">TikTok ile bağlan</button></div>
 <script>
 var p=new URLSearchParams(location.search),c=p.get('code'),e=p.get('error');
 var o=document.getElementById('o');
 if(c){o.innerHTML='<p>Bu kodu kopyala ve 10 dakika içinde GitHub\'da <b>TikTok bağla</b> iş akışına yapıştır:</p><code id="c"></code><button onclick="navigator.clipboard.writeText(document.getElementById(\'c\').textContent);this.textContent=\'Kopyalandı\'">Kopyala</button>';document.getElementById('c').textContent=c;}
-else if(e){o.textContent='Hata: '+e+' '+(p.get('error_description')||'');}
+function go(){var k=document.getElementById('k').value.trim();if(!k)return;
+location.href='https://www.tiktok.com/v2/auth/authorize/?client_key='+encodeURIComponent(k)+'&scope=user.info.basic,video.upload,video.publish&response_type=code&redirect_uri='+encodeURIComponent(location.origin+location.pathname)+'&state=klipbot';}
+if(c){}else if(e){o.textContent='Hata: '+e+' '+(p.get('error_description')||'');}
 </script></body></html>
