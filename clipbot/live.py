@@ -359,7 +359,7 @@ class Publisher:
         finally:
             shutil.rmtree(d, ignore_errors=True)
 
-    def stash(self, cid, out, title):
+    def stash(self, cid, out, title, platforms=("youtube", "tiktok")):
         """Yuklenemeyen klibi GitHub Release'e koyar ve hazir/ kuyruguna is dosyasi ekler."""
         tag = "canli-" + cid[:8]
         env = {**os.environ}
@@ -371,7 +371,7 @@ class Publisher:
             shutil.copy(out, asset)
             subprocess.run(["gh", "release", "upload", tag, str(asset), "--clobber"], capture_output=True, env=env, check=True)
             job = {"asset": f"{tag}/{cid}.mp4", "streamer": self.args.channel, "title": title,
-                   "hashtags": self.args.hashtags, "tags": self.args.tags, "platforms": ["youtube", "tiktok"],
+                   "hashtags": self.args.hashtags, "tags": self.args.tags, "platforms": list(platforms),
                    "tiktok_mode": "draft", "youtube_privacy": "public"}
             (ROOT / "hazir").mkdir(exist_ok=True)
             (ROOT / "hazir" / f"{cid}-canli.json").write_text(json.dumps(job, ensure_ascii=False, indent=1))
@@ -420,8 +420,11 @@ class Publisher:
                 self.tt_count += 1
             except Exception as e:  # noqa: BLE001
                 res["tiktok"] = f"HATA {e}"
-        if not any(isinstance(v, str) and not v.startswith("HATA") for v in res.values()):
-            res["saklandi"] = self.stash(cid, out, title)
+        ok = lambda k: isinstance(res.get(k), str) and not res[k].startswith("HATA")
+        missing = [k for k in ("youtube", "tiktok") if not ok(k)
+                   and (k == "youtube" or os.environ.get("TIKTOK_CLIENT_KEY"))]
+        if missing:  # YouTube kotasi doldu / hata: klip kaybolmasin, sonra yuklenecek
+            res["saklandi"] = self.stash(cid, out, title, missing)
         log(cid, "YUKLEME", json.dumps(res, ensure_ascii=False), "|", m["yt_title"])
         d = ROOT / ".canli"
         if d.exists():
