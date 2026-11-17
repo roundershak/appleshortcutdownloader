@@ -86,7 +86,9 @@ def run_job(job_path: Path) -> int:
                                                     privacy=job.get("youtube_privacy", "public"))
             except Exception as e:
                 failed, results["youtube"] = True, f"HATA: {e}"
-        if "tiktok" in platforms:
+        if "tiktok" in platforms and not os.environ.get("TIKTOK_CLIENT_KEY"):
+            results["tiktok"] = "atlandi (TikTok henuz bagli degil)"
+        elif "tiktok" in platforms:
             try:
                 from . import tiktok
                 results["tiktok"] = tiktok.upload(out, meta["caption"], mode=job.get("tiktok_mode", "draft"))

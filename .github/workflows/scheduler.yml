@@ -62,7 +62,9 @@ jobs:
           TIKTOK_REDIRECT_URI: ${{ secrets.TIKTOK_REDIRECT_URI }}
           GH_PAT: ${{ secrets.GH_PAT }}
           GH_TOKEN: ${{ github.token }}
-        run: python -m clipbot run "${{ steps.pick.outputs.file }}" | tee run.log
+        run: |
+          set -o pipefail
+          python -m clipbot run "${{ steps.pick.outputs.file }}" | tee run.log
 
       - name: Sonucu kaydet
         if: steps.pick.outputs.file != ''
