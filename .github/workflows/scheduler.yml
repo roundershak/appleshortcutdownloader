@@ -13,6 +13,7 @@ concurrency:
 
 permissions:
   contents: write
+  actions: read
 
 jobs:
   publish-next:
@@ -25,8 +26,11 @@ jobs:
         id: pick
         env:
           YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           if [ -z "$YT_REFRESH_TOKEN" ]; then echo "YouTube secret'lari yok, atlaniyor"; exit 0; fi
+          if [ -n "$(gh run list --workflow live.yml --status in_progress --json databaseId -q '.[].databaseId' 2>/dev/null)" ]; then
+            echo "Canli takip calisiyor, YouTube kotasi canliya ayrildi; atlaniyor"; exit 0; fi
           f=$(ls hazir/*.json 2>/dev/null | sort | head -1)
           echo "file=$f" >> "$GITHUB_OUTPUT"
           echo "Secilen: ${f:-yok}"

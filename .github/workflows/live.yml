@@ -1,0 +1,72 @@
+name: Canli klip
+
+on:
+  schedule:
+    - cron: "35 8 18 11 *"   # 18 Kasim 11:35 TR (GTA 6 yayini 12:00)
+  workflow_dispatch:
+    inputs:
+      channel: {description: "Kick kanali", default: "eray"}
+      game_name: {description: "Basliklardaki oyun adi", default: "gta 6"}
+      dry_run: {description: "Yukleme yapma (test)", default: "false"}
+      max_hours: {description: "Bu calismanin suresi (saat)", default: "5.6"}
+      title_wait: {description: "Claude baslik bekleme (sn)", default: "240"}
+      bitis: {description: "Zincirin duracagi tarih (UTC, YYYY-MM-DD)", default: "2026-11-24"}
+
+concurrency:
+  group: live-${{ github.event.inputs.channel || 'eray' }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+    env:
+      CH: ${{ github.event.inputs.channel || 'eray' }}
+      GAME: ${{ github.event.inputs.game_name || 'gta 6' }}
+      DRY: ${{ github.event.inputs.dry_run || 'false' }}
+      HOURS: ${{ github.event.inputs.max_hours || '5.6' }}
+      TWAIT: ${{ github.event.inputs.title_wait || '240' }}
+      BITIS: ${{ github.event.inputs.bitis || '2026-11-24' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Kurulum
+        run: |
+          command -v ffmpeg >/dev/null || (sudo apt-get update -q && sudo apt-get install -y -q ffmpeg)
+          pip install -q -r requirements.txt faster-whisper curl_cffi
+          git config --global user.name "klip-bot"
+          git config --global user.email "klip-bot@users.noreply.github.com"
+      - name: Canli takip
+        id: live
+        env:
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+          TIKTOK_CLIENT_KEY: ${{ secrets.TIKTOK_CLIENT_KEY }}
+          TIKTOK_CLIENT_SECRET: ${{ secrets.TIKTOK_CLIENT_SECRET }}
+          TIKTOK_REFRESH_TOKEN: ${{ secrets.TIKTOK_REFRESH_TOKEN }}
+          TIKTOK_AUTH_CODE: ${{ secrets.TIKTOK_AUTH_CODE }}
+          TIKTOK_REDIRECT_URI: ${{ secrets.TIKTOK_REDIRECT_URI }}
+          GH_PAT: ${{ secrets.GH_PAT }}
+        run: |
+          set +e
+          extra=""; [ "$DRY" = "true" ] && extra="--dry-run"
+          python -m clipbot.live --channel "$CH" --game-name "$GAME" --max-hours "$HOURS" --title-wait "$TWAIT" $extra
+          echo "code=$?" >> "$GITHUB_OUTPUT"
+      - name: Zinciri devam ettir
+        if: always() && steps.live.outputs.code != '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "$(date -u +%F)" \> "$BITIS" ]; then echo "bitis tarihi gecti"; exit 0; fi
+          if [ "$DRY" = "true" ]; then echo "test calismasi, zincir yok"; exit 0; fi
+          gh workflow run live.yml --ref "$GITHUB_REF_NAME" -f channel="$CH" -f game_name="$GAME" -f dry_run="$DRY" -f max_hours="$HOURS" -f title_wait="$TWAIT" -f bitis="$BITIS"
