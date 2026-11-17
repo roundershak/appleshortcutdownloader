@@ -346,18 +346,40 @@ class Publisher:
                     "rage": ev["rage"], "chat": ev["texts"][:15], "speech": lines, "layout": plan["layout"],
                     "cam": plan["cam"], "fallback_title": title, "dur": round(b - a, 1)}
             log(cid, "hazir", json.dumps({k: meta[k] for k in ("score", "layout", "fallback_title")}, ensure_ascii=False))
+            arc = None if self.args.dry_run else self.archive(cid, out)
+            log(cid, "arsiv:", arc)
+            publish = ev["score"] >= self.args.auto_publish  # Claude cevap vermezse sadece cok guclu anlar
             if publish_log(cid, meta, jpg) and self.args.title_wait > 0:
                 t = wait_title(cid, self.args.title_wait)
                 if t:
                     if t.strip().upper() == "ATLA":
-                        log(cid, "Claude atla dedi")
-                        return
-                    title = t
-            self.upload(cid, out, title, ev)
+                        publish = False
+                    else:
+                        title, publish = t, True
+            if publish:
+                self.upload(cid, out, title, ev)
+            else:
+                log(cid, "sadece arsivlendi (en iyi anlardan degil)")
+                self.note(cid, {"title": title, "arsiv": arc, "yayin": "yok"})
         except Exception as e:  # noqa: BLE001
             log(cid, "HATA", e)
         finally:
             shutil.rmtree(d, ignore_errors=True)
+
+    def archive(self, cid, out):
+        """Her klibi (yuklensin ya da yuklenmesin) gunluk arsiv Release'ine koyar."""
+        tag = "arsiv-" + cid[:8]
+        try:
+            if subprocess.run(["gh", "release", "view", tag], capture_output=True).returncode != 0:
+                subprocess.run(["gh", "release", "create", tag, "--prerelease", "-t", f"Klip arsivi {cid[:8]}",
+                                "-n", "Canli takipte kesilen tum klipler"], capture_output=True, check=True)
+            asset = Path(out).with_name(f"{cid}.mp4")
+            shutil.copy(out, asset)
+            r = subprocess.run(["gh", "release", "upload", tag, str(asset), "--clobber"], capture_output=True, text=True)
+            asset.unlink(missing_ok=True)
+            return f"{tag}/{cid}.mp4" if r.returncode == 0 else f"HATA {r.stderr[:120]}"
+        except Exception as e:  # noqa: BLE001
+            return f"HATA {e}"
 
     def stash(self, cid, out, title, platforms=("youtube", "tiktok")):
         """Yuklenemeyen klibi GitHub Release'e koyar ve hazir/ kuyruguna is dosyasi ekler."""
@@ -384,6 +406,14 @@ class Publisher:
             return f"release {tag}/{cid}.mp4 + hazir/"
         except Exception as e:  # noqa: BLE001
             return f"HATA saklanamadi {e}"
+
+    def note(self, cid, data):
+        d = ROOT / ".canli"
+        if d.exists():
+            (d / "canli" / f"{cid}.sonuc").write_text(json.dumps(data, ensure_ascii=False))
+            subprocess.run(["git", "add", "-A"], cwd=d); subprocess.run(["git", "commit", "-qm", f"sonuc {cid}"], cwd=d, capture_output=True)
+            subprocess.run(["git", "pull", "-q", "--rebase", "origin", LOG_BRANCH], cwd=d, capture_output=True)
+            subprocess.run(["git", "push", "-q", "origin", f"HEAD:{LOG_BRANCH}"], cwd=d, capture_output=True)
 
     def upload(self, cid, out, title, ev):
         from .__main__ import build_meta
@@ -449,6 +479,7 @@ def main():
     ap.add_argument("--yt-gap", type=float, default=60, help="YouTube yuklemeleri arasi min dk")
     ap.add_argument("--yt-strong", type=float, default=2.6)
     ap.add_argument("--tt-daily", type=int, default=5)
+    ap.add_argument("--auto-publish", type=float, default=2.8, help="Claude cevap vermezse bu skorun ustu yayinlanir")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
