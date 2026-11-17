@@ -393,6 +393,13 @@ class Publisher:
         res = {}
         if self.args.dry_run:
             log(cid, "DRY-RUN, yuklenmedi:", m["yt_title"])
+            if not getattr(self, "_stash_tested", False):
+                self._stash_tested = True
+                tag = "test-" + cid
+                r1 = subprocess.run(["gh", "release", "create", tag, "--prerelease", "-t", tag, "-n", "test"], capture_output=True, text=True)
+                r2 = subprocess.run(["gh", "release", "upload", tag, str(out)], capture_output=True, text=True)
+                r3 = subprocess.run(["gh", "release", "delete", tag, "-y", "--cleanup-tag"], capture_output=True, text=True)
+                log("SAKLAMA TESTI", r1.returncode, r2.returncode, r3.returncode, (r1.stderr + r2.stderr + r3.stderr)[:300])
             return
         day = time.strftime("%Y-%m-%d", time.gmtime(time.time() - 8 * 3600))  # YouTube kotasi PT gece yarisi
         if day != self.yt_day:
