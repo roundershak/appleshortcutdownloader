@@ -45,7 +45,11 @@ def build_meta(job: dict, info: kick.ClipInfo, s: dict) -> dict:
 def run_job(job_path: Path) -> int:
     job = json.loads(job_path.read_text(encoding="utf-8"))
     streamers = load_streamers()
-    info = kick.clip_info(job["url"])
+    if job.get("vod"):  # yayin tekrarindan kesit
+        info = kick.ClipInfo(url=f"https://kick.com/{job.get('streamer', '')}/videos/{job['vod']}",
+                             title=job.get("title"), channel=job.get("streamer"))
+    else:
+        info = kick.clip_info(job["url"])
     key = (job.get("streamer") or info.channel or "").lower()
     s = {**streamers["_default"], **streamers.get(key, {})}
     print(f"[job] {job_path.name}: kanal={info.channel} profil={key if key in streamers else '_default'}")
@@ -53,7 +57,11 @@ def run_job(job_path: Path) -> int:
     work = Path(tempfile.mkdtemp(prefix="clip_"))
     results, failed = {}, False
     try:
-        src = kick.download(info, work / "src.mp4")
+        if job.get("vod"):
+            src = kick.cut_vod(job["vod"], float(job["start"]), float(job["end"]), work / "src.mp4")
+            job = {**job, "start": None, "end": None}
+        else:
+            src = kick.download(info, work / "src.mp4")
         plan = edit.plan_layout(src, cam=_region(job.get("cam", s.get("cam"))),
                                 game=_region(job.get("game", s.get("game"))),
                                 layout=job.get("layout", "auto"), cam_h=int(job.get("cam_h", edit.DEFAULT_CAM_H)))

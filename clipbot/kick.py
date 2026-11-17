@@ -65,3 +65,16 @@ def download(info: ClipInfo, out: Path) -> Path:
                            capture_output=True, text=True)
         info.title = r.stdout.strip() or None
     return out
+
+
+def vod_source(uuid: str) -> str:
+    return _get_json(f"https://kick.com/api/v1/video/{uuid}")["source"]
+
+
+def cut_vod(uuid: str, start: float, end: float, out: Path, quality: str = "1080p60") -> Path:
+    """Yayin tekrarindan sadece istenen araligi indirir (tum yayini degil)."""
+    out.parent.mkdir(parents=True, exist_ok=True)
+    src = vod_source(uuid).rsplit("/", 1)[0] + f"/{quality}/playlist.m3u8"
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", str(start), "-i", src, "-t", str(end - start),
+                    "-c", "copy", str(out)], check=True)
+    return out

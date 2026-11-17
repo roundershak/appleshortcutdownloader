@@ -3,7 +3,8 @@
   "eray": {
     "display": "Eray",
     "kick": "eray",
-    "cam": [0.0, 0.0, 0.222, 0.219],
+    "cam": [0.0, 0.237, 0.234, 0.233],
+    "_cam_eski_klipler": [0.0, 0.0, 0.222, 0.219],
     "game": null,
     "tags": ["eray", "eray klip", "eray kick", "kick", "kick klip", "kngl", "komik anlar"],
     "hashtags": ["#eray", "#kick", "#kngl"]
