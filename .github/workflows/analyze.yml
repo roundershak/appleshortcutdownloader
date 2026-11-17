@@ -1,0 +1,23 @@
+name: YouTube analiz
+
+on:
+  push:
+    paths:
+      - "analysis/yt-*.txt"
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -q "yt-dlp[default,curl-cffi]"
+      - name: Analiz
+        run: |
+          f=$(git diff-tree --no-commit-id --name-only -r HEAD -- 'analysis/yt-*.txt' | head -1)
+          python tools/yt_analyze.py $(cat "$f")
