@@ -83,7 +83,7 @@ def run_job(job_path: Path) -> int:
         if "tiktok" in platforms:
             try:
                 from . import tiktok
-                results["tiktok"] = tiktok.upload(out, meta["caption"], mode=job.get("tiktok_mode", "direct"))
+                results["tiktok"] = tiktok.upload(out, meta["caption"], mode=job.get("tiktok_mode", "draft"))
             except Exception as e:
                 failed, results["tiktok"] = True, f"HATA: {e}"
     finally:
