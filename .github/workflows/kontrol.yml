@@ -3,6 +3,9 @@ name: Kurulum kontrol
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -33,3 +36,11 @@ jobs:
           echo "--- TikTok giris linki"
           enc=$(jq -rn --arg u "$TIKTOK_REDIRECT_URI" '$u|@uri')
           echo "https://www.tiktok.com/v2/auth/authorize/?client_key=${TIKTOK_CLIENT_KEY}&scope=user.info.basic,video.upload,video.publish&response_type=code&redirect_uri=${enc}&state=klipbot"
+      - name: Arsiv (Release) testi
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo test > t.txt
+          gh release create test-arsiv --prerelease -t test -n test --repo "$GITHUB_REPOSITORY" && \
+          gh release upload test-arsiv t.txt --repo "$GITHUB_REPOSITORY" && echo "ARSIV: TAMAM" || echo "ARSIV: HATA"
+          gh release delete test-arsiv -y --cleanup-tag --repo "$GITHUB_REPOSITORY" || true
