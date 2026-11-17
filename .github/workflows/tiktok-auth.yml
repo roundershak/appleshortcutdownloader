@@ -1,0 +1,32 @@
+name: TikTok bagla
+
+on:
+  workflow_dispatch:
+    inputs:
+      code:
+        description: "tiktok.html sayfasindaki kod"
+        required: true
+
+jobs:
+  auth:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Kodu kalici token'a cevir ve kaydet
+        env:
+          KEY: ${{ secrets.TIKTOK_CLIENT_KEY }}
+          SECRET: ${{ secrets.TIKTOK_CLIENT_SECRET }}
+          REDIRECT: ${{ secrets.TIKTOK_REDIRECT_URI }}
+          CODE: ${{ github.event.inputs.code }}
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          resp=$(curl -sS -X POST https://open.tiktokapis.com/v2/oauth/token/ \
+            -H "Content-Type: application/x-www-form-urlencoded" \
+            --data-urlencode "client_key=$KEY" --data-urlencode "client_secret=$SECRET" \
+            --data-urlencode "code=$CODE" --data-urlencode "grant_type=authorization_code" \
+            --data-urlencode "redirect_uri=$REDIRECT")
+          rt=$(echo "$resp" | jq -r '.refresh_token // empty')
+          if [ -z "$rt" ]; then echo "HATA: $(echo "$resp" | jq -c '{error,error_description}')"; exit 1; fi
+          echo "::add-mask::$rt"
+          echo "Kapsam: $(echo "$resp" | jq -r .scope)  | gecerlilik: $(echo "$resp" | jq -r .refresh_expires_in) sn"
+          gh secret set TIKTOK_REFRESH_TOKEN --repo "$GITHUB_REPOSITORY" --body "$rt"
+          echo "TikTok baglandi, TIKTOK_REFRESH_TOKEN kaydedildi."
