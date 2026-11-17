@@ -1,0 +1,2 @@
+[sonuc] youtube: HATA: ('invalid_client: The OAuth client was not found.', {'error': 'invalid_client', 'error_description': 'The OAuth client was not found.'})
+[sonuc] tiktok: HATA: TIKTOK_REFRESH_TOKEN veya TIKTOK_AUTH_CODE secret'i yok
