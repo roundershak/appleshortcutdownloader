@@ -359,6 +359,32 @@ class Publisher:
         finally:
             shutil.rmtree(d, ignore_errors=True)
 
+    def stash(self, cid, out, title):
+        """Yuklenemeyen klibi GitHub Release'e koyar ve hazir/ kuyruguna is dosyasi ekler."""
+        tag = "canli-" + cid[:8]
+        env = {**os.environ}
+        try:
+            if subprocess.run(["gh", "release", "view", tag], capture_output=True, env=env).returncode != 0:
+                subprocess.run(["gh", "release", "create", tag, "--prerelease", "-t", tag, "-n", "Canli klipler (yuklenince silinir)"],
+                               capture_output=True, env=env, check=True)
+            asset = Path(out).with_name(f"{cid}.mp4")
+            shutil.copy(out, asset)
+            subprocess.run(["gh", "release", "upload", tag, str(asset), "--clobber"], capture_output=True, env=env, check=True)
+            job = {"asset": f"{tag}/{cid}.mp4", "streamer": self.args.channel, "title": title,
+                   "hashtags": self.args.hashtags, "tags": self.args.tags, "platforms": ["youtube", "tiktok"],
+                   "tiktok_mode": "draft", "youtube_privacy": "public"}
+            (ROOT / "hazir").mkdir(exist_ok=True)
+            (ROOT / "hazir" / f"{cid}-canli.json").write_text(json.dumps(job, ensure_ascii=False, indent=1))
+            git("add", f"hazir/{cid}-canli.json")
+            git("commit", "-qm", f"canli klip kuyruga: {cid}")
+            for _ in range(3):
+                git("pull", "-q", "--rebase", check=False)
+                if git("push", "-q", check=False).returncode == 0:
+                    break
+            return f"release {tag}/{cid}.mp4 + hazir/"
+        except Exception as e:  # noqa: BLE001
+            return f"HATA saklanamadi {e}"
+
     def upload(self, cid, out, title, ev):
         from .__main__ import build_meta
         from .kick import ClipInfo
@@ -387,6 +413,8 @@ class Publisher:
                 self.tt_count += 1
             except Exception as e:  # noqa: BLE001
                 res["tiktok"] = f"HATA {e}"
+        if not any(isinstance(v, str) and not v.startswith("HATA") for v in res.values()):
+            res["saklandi"] = self.stash(cid, out, title)
         log(cid, "YUKLEME", json.dumps(res, ensure_ascii=False), "|", m["yt_title"])
         d = ROOT / ".canli"
         if d.exists():

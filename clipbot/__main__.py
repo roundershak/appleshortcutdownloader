@@ -8,6 +8,7 @@ import argparse
 import json
 import os
 import shutil
+import subprocess
 import sys
 import tempfile
 from pathlib import Path
@@ -57,17 +58,22 @@ def run_job(job_path: Path) -> int:
     work = Path(tempfile.mkdtemp(prefix="clip_"))
     results, failed = {}, False
     try:
-        if job.get("vod"):
-            src = kick.cut_vod(job["vod"], float(job["start"]), float(job["end"]), work / "src.mp4")
-            job = {**job, "start": None, "end": None}
+        if job.get("asset"):  # canli takipten gelen, edit edilmis klip
+            tag, name = job["asset"].split("/", 1)
+            subprocess.run(["gh", "release", "download", tag, "-p", name, "-D", str(work)], check=True)
+            out = work / name
         else:
-            src = kick.download(info, work / "src.mp4")
-        plan = edit.plan_layout(src, cam=_region(job.get("cam", s.get("cam"))),
-                                game=_region(job.get("game", s.get("game"))),
-                                layout=job.get("layout", "auto"), cam_h=int(job.get("cam_h", edit.DEFAULT_CAM_H)))
-        print(f"[edit] layout={plan['layout']} cam={plan['cam']} ({plan['source']}) game={plan['game']}")
-        out = edit.render(src, work / "out.mp4", plan, start=job.get("start"), end=job.get("end"))
-        src.unlink(missing_ok=True)
+            if job.get("vod"):
+                src = kick.cut_vod(job["vod"], float(job["start"]), float(job["end"]), work / "src.mp4")
+                job = {**job, "start": None, "end": None}
+            else:
+                src = kick.download(info, work / "src.mp4")
+            plan = edit.plan_layout(src, cam=_region(job.get("cam", s.get("cam"))),
+                                    game=_region(job.get("game", s.get("game"))),
+                                    layout=job.get("layout", "auto"), cam_h=int(job.get("cam_h", edit.DEFAULT_CAM_H)))
+            print(f"[edit] layout={plan['layout']} cam={plan['cam']} ({plan['source']}) game={plan['game']}")
+            out = edit.render(src, work / "out.mp4", plan, start=job.get("start"), end=job.get("end"))
+            src.unlink(missing_ok=True)
         print(f"[edit] hazir: {out.stat().st_size / 1e6:.1f} MB")
         meta = build_meta(job, info, s)
         print(f"[meta] YouTube basligi: {meta['yt_title']}\n[meta] TikTok: {meta['caption']}")
@@ -86,6 +92,9 @@ def run_job(job_path: Path) -> int:
                 results["tiktok"] = tiktok.upload(out, meta["caption"], mode=job.get("tiktok_mode", "draft"))
             except Exception as e:
                 failed, results["tiktok"] = True, f"HATA: {e}"
+        if job.get("asset") and not failed:  # bulutta bekleyen kopyayi sil
+            tag, name = job["asset"].split("/", 1)
+            subprocess.run(["gh", "release", "delete-asset", tag, name, "-y"], capture_output=True)
     finally:
         shutil.rmtree(work, ignore_errors=True)  # videolar hicbir yerde kalmaz
         print("[temizlik] gecici dosyalar silindi")
