@@ -3,25 +3,78 @@
   "eray": {
     "display": "Eray",
     "kick": "eray",
-    "cam": [0.0, 0.237, 0.234, 0.233],
-    "_cam_eski_klipler": [0.0, 0.0, 0.222, 0.219],
+    "cam": [
+      0.0,
+      0.237,
+      0.234,
+      0.233
+    ],
+    "_cam_eski_klipler": [
+      0.0,
+      0.0,
+      0.222,
+      0.219
+    ],
     "game": null,
-    "tags": ["eray", "eray klip", "eray kick", "kick", "kick klip", "kngl", "komik anlar"],
-    "hashtags": ["#eray", "#kick", "#kngl"]
+    "tags": [
+      "eray",
+      "eraycan özkenar",
+      "eray kick",
+      "eray klip",
+      "eray kesit",
+      "kick kesit",
+      "kick klip",
+      "eraycanözkenar"
+    ],
+    "hashtags": [
+      "#eraycanözkenar",
+      "#eray",
+      "#kick",
+      "#kickkesit",
+      "#kesit",
+      "#klip",
+      "#fyp",
+      "#keşfet",
+      "#viral",
+      "#kicktr"
+    ]
   },
   "ebonivon": {
     "display": "Ebonivon",
     "kick": "ebonivon",
     "cam": null,
     "game": null,
-    "tags": ["ebonivon", "ebonivon klip", "ebonivon kick", "kick", "kick klip", "komik anlar"],
-    "hashtags": ["#ebonivon", "#kick"]
+    "tags": [
+      "ebonivon",
+      "ebonivon klip",
+      "ebonivon kick",
+      "kick",
+      "kick klip",
+      "komik anlar"
+    ],
+    "hashtags": [
+      "#ebonivon",
+      "#eray",
+      "#kick",
+      "#kickkesit",
+      "#kesit",
+      "#klip",
+      "#fyp",
+      "#keşfet",
+      "#viral"
+    ]
   },
   "_default": {
     "display": null,
     "cam": null,
     "game": null,
-    "tags": ["kick", "kick klip", "komik anlar"],
-    "hashtags": ["#kick"]
+    "tags": [
+      "kick",
+      "kick klip",
+      "komik anlar"
+    ],
+    "hashtags": [
+      "#kick"
+    ]
   }
 }
