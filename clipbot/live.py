@@ -309,11 +309,11 @@ class Publisher:
                     best, best_n = cand, n
         if best:
             return {"cam": best}
-        f = edit.detect_face(src, meta, samples=12)
-        if f and f[3] > H * 0.18:  # kamera tam ekran (IRL / sohbet)
-            return {"layout": "full"}
-        if f:
-            return {"cam": None}  # otomatik yuz kadraji
+        if not self.cfg.get("cam_candidates"):  # tanimsiz yayinci: otomatik yuz kadraji
+            f = edit.detect_face(src, meta, samples=12)
+            if f and f[3] < H * 0.18:
+                return {"cam": None}
+        # bilinen kamera yerlerinde yuz yok: kamera kapali / tam ekran video -> bulanik arka planli tam ekran
         return {"layout": "full"}
 
     def handle(self, ev, rec: Recorder):
