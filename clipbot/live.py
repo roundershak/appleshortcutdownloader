@@ -618,8 +618,10 @@ def main():
                     # Durma: yayin ara verdi; isleri bitir, zincir yeni calismada tekrar acilmasini bekler
                     log("yayin kapali (ara?), bekleme moduna geciliyor")
                     # gunun son klibi: yayin bitince yuklenir
-                    r = subprocess.run(["gh", "workflow", "run", "best.yml", "-f", "hours=24"], capture_output=True, text=True, cwd=ROOT)
-                    log("yayin bitti -> son klip secimi tetiklendi", r.returncode)
+                    hh = time.gmtime().tm_hour
+                    if hh >= 19 or hh < 6:  # gece bitisi (TR 22:00 sonrasi); gun ici molalarda degil
+                        r = subprocess.run(["gh", "workflow", "run", "best.yml", "-f", "hours=24"], capture_output=True, text=True, cwd=ROOT)
+                        log("yayin bitti -> son klip secimi tetiklendi", r.returncode)
                     jobs.put(None); th.join(timeout=900); return 2
         slot_tick()
         if time.time() - last_state > 600:
