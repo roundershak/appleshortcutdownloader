@@ -1,0 +1,111 @@
+{
+ "id": "20261118-120305",
+ "score": 0.906,
+ "peak": 0.15789473684210525,
+ "base": 0.18653846153846154,
+ "hype": 0.5897435897435898,
+ "rage": 0.0,
+ "chat": [
+  "oha",
+  "ooo",
+  "OHAAA",
+  "OHA",
+  "OWWWWWWW",
+  "ohaa",
+  "EBENİN",
+  "OHA AMK",
+  "bu oyun bitmez",
+  "OHA",
+  "ohaa",
+  "EBENİN",
+  "OHA AMK",
+  "bu oyun bitmez",
+  "OHA"
+ ],
+ "speech": [
+  [
+   0.1,
+   "Z2."
+  ],
+  [
+   2.1,
+   "Haa."
+  ],
+  [
+   4.1,
+   "Haa."
+  ],
+  [
+   6.1,
+   "Haa."
+  ],
+  [
+   8.1,
+   "Haa."
+  ],
+  [
+   10.1,
+   "Uuu."
+  ],
+  [
+   12.1,
+   "Ağzı kuzen."
+  ],
+  [
+   14.1,
+   "Açmıyor öyle."
+  ],
+  [
+   16.1,
+   "Şimdi neresi var biliyor musun? Spor salonu var."
+  ],
+  [
+   18.1,
+   "Çet bizim şey topukla yakabı yok."
+  ],
+  [
+   20.1,
+   "Ne?"
+  ],
+  [
+   22.1,
+   "Burada bir topukla yakabı değil."
+  ],
+  [
+   24.1,
+   "Nerede kuzen? Var mı diyorsun?"
+  ],
+  [
+   26.1,
+   "Topukla yakabı değil de bak sol altta doğru hemen gördüm."
+  ],
+  [
+   28.1,
+   "Gel sol altta doğru gel."
+  ],
+  [
+   30.1,
+   "Haa şey yok bir yukarı al."
+  ],
+  [
+   32.1,
+   "Bir yukarı al burada görünmüyor."
+  ],
+  [
+   34.1,
+   "Haa."
+  ],
+  [
+   36.1,
+   "Bak şu aşa aşa aşa aşa aşa aşa"
+  ],
+  [
+   38.1,
+   "Ağzı kuzen."
+  ]
+ ],
+ "layout": "full",
+ "cam": null,
+ "fallback_title": "eray gta 6'da chat'i kopardı!!",
+ "dur": 40.0
+}
