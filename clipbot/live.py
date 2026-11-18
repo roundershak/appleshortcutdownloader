@@ -297,23 +297,34 @@ class Publisher:
         self.tt_count = 0
 
     def choose_cam(self, src: Path):
+        """Eray'in kamera kutusunu bul: yuz, karelerin cogunda ve kamera boyutunda olmali."""
+        import cv2
         meta = edit.probe(src)
-        W, H = meta["w"], meta["h"]
-        best, best_n = None, 0
-        for cand in self.cfg.get("cam_candidates", []):
-            reg = edit._frac(cand, W, H)
-            f = edit.detect_face(src, meta, samples=10, region=reg)
-            if f and f[3] < H * 0.2:
-                n = 1 + (1 if reg[0] < W * 0.3 or reg[0] > W * 0.6 else 0)
-                if n > best_n:
-                    best, best_n = cand, n
-        if best:
-            return {"cam": best}
-        if not self.cfg.get("cam_candidates"):  # tanimsiz yayinci: otomatik yuz kadraji
-            f = edit.detect_face(src, meta, samples=12)
-            if f and f[3] < H * 0.18:
-                return {"cam": None}
-        # bilinen kamera yerlerinde yuz yok: kamera kapali / tam ekran video -> bulanik arka planli tam ekran
+        W, H, dur = meta["w"], meta["h"], meta["duration"]
+        casc = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
+        cands = [edit._frac(c, W, H) for c in self.cfg.get("cam_candidates", [])]
+        hits = [0] * len(cands)
+        n = 12
+        cap = cv2.VideoCapture(str(src))
+        for i in range(n):
+            cap.set(cv2.CAP_PROP_POS_MSEC, dur * (i + 0.5) / n * 1000)
+            ok, fr = cap.read()
+            if not ok:
+                continue
+            for j, (x, y, w, h) in enumerate(cands):
+                x, y, w, h = int(x), int(y), int(w), int(h)
+                roi = cv2.equalizeHist(cv2.cvtColor(fr[y:y + h, x:x + w], cv2.COLOR_BGR2GRAY))
+                faces = casc.detectMultiScale(roi, 1.1, 5, minSize=(int(H * 0.035), int(H * 0.035)),
+                                              maxSize=(int(H * 0.14), int(H * 0.14)))
+                if len(faces):
+                    hits[j] += 1
+        cap.release()
+        if cands:
+            j = max(range(len(cands)), key=lambda k: hits[k])
+            log("kamera adaylari:", hits)
+            if hits[j] >= n * 0.6:
+                return {"cam": self.cfg["cam_candidates"][j]}
+        # kamera kutusu yok (IRL, tam ekran video, kamera kapali) -> bulanik arka planli tam ekran
         return {"layout": "full"}
 
     def handle(self, ev, rec: Recorder):
