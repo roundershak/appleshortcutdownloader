@@ -1,0 +1,60 @@
+name: Montaj edit
+
+# montaj/*.json eklenince: yayin kaydindan hizli kesmeli dikey montaj -> TikTok taslak
+on:
+  push:
+    paths:
+      - "montaj/*.json"
+  workflow_dispatch:
+    inputs:
+      spec:
+        description: "montaj/ altindaki spec dosyasi"
+        required: true
+
+concurrency:
+  group: clip-publish
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  montaj:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Spec bul
+        id: s
+        run: |
+          if [ -n "${{ github.event.inputs.spec }}" ]; then f="${{ github.event.inputs.spec }}"
+          else f=$(git diff --name-only --diff-filter=A "${{ github.event.before }}" "${{ github.sha }}" -- 'montaj/*.json' 2>/dev/null || git diff-tree --no-commit-id --name-only --diff-filter=A -r HEAD -- 'montaj/*.json'); fi
+          echo "files=$(echo $f | tr '\n' ' ')" >> "$GITHUB_OUTPUT"; echo "Islenecek: $f"
+      - uses: actions/setup-python@v5
+        if: steps.s.outputs.files != ''
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Kurulum
+        if: steps.s.outputs.files != ''
+        run: |
+          command -v ffmpeg >/dev/null || (sudo apt-get update -q && sudo apt-get install -y -q ffmpeg)
+          pip install -q -r requirements.txt
+      - name: Montaj yap ve TikTok taslagina gonder
+        if: steps.s.outputs.files != ''
+        env:
+          TIKTOK_CLIENT_KEY: ${{ secrets.TIKTOK_CLIENT_KEY }}
+          TIKTOK_CLIENT_SECRET: ${{ secrets.TIKTOK_CLIENT_SECRET }}
+          TIKTOK_REFRESH_TOKEN: ${{ secrets.TIKTOK_REFRESH_TOKEN }}
+          TIKTOK_REDIRECT_URI: ${{ secrets.TIKTOK_REDIRECT_URI }}
+          GH_PAT: ${{ secrets.GH_PAT }}
+          GH_TOKEN: ${{ secrets.GH_PAT || github.token }}
+        run: |
+          for f in ${{ steps.s.outputs.files }}; do
+            n=$(basename "$f" .json); out="montaj-$n.mp4"
+            python tools/montage.py "$f" "$out"
+            python -c "import json,sys; from pathlib import Path; from clipbot import tiktok; s=json.load(open('$f')); print('[sonuc] tiktok:', tiktok.upload(Path('$out'), s.get('caption',''), mode='draft'))"
+            gh release upload montaj "$out" --clobber 2>/dev/null || (gh release create montaj -t "Montaj editleri" -n "Yayin montajlari" && gh release upload montaj "$out" --clobber) || true
+          done
