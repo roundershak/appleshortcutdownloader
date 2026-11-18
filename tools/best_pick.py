@@ -22,7 +22,9 @@ for y in d.glob("2*.yayin"):
     cid0 = y.stem
     t0 = datetime.strptime(cid0, "%Y%m%d-%H%M%S").replace(tzinfo=timezone.utc).timestamp()
     j0 = d / f"{cid0}.json"
-    if now - t0 < 24 * 3600 and j0.exists() and json.loads(j0.read_text()).get("layout") != "split":
+    tur0 = d / f"{cid0}.tur"
+    k0 = tur0.read_text().strip() if tur0.exists() else (json.loads(j0.read_text()).get("layout") == "split" and "oyun" or "irl") if j0.exists() else "oyun"
+    if now - t0 < 24 * 3600 and k0 == "irl":
         irl_done += 1
 cands = []
 for j in d.glob("2*.json"):
@@ -38,7 +40,8 @@ for j in d.glob("2*.json"):
         continue
     if (d / f"{cid}.yayin").exists() or not str(son.get("arsiv", "")).startswith("arsiv-"):
         continue
-    kind = "oyun" if meta.get("layout") == "split" else "irl"
+    tur_f = d / f"{cid}.tur"  # Claude'un isaretledigi tur, yoksa duzenden tahmin
+    kind = tur_f.read_text().strip() if tur_f.exists() else ("oyun" if meta.get("layout") == "split" else "irl")
     if kind == "irl" and irl_done >= a.irl_per_day:
         continue  # gunde en fazla 2 IRL, en az 4 oyun
     # Claude'un onayladigi (baslik yazdigi) klipler once, sonra skor
