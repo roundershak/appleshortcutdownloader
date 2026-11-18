@@ -149,7 +149,7 @@ def _filters(plan: dict) -> str:
         gx, gy, gw, gh = plan["game"]
         return (
             f"[0:v]split=2[a][b];"
-            f"[a]crop={cw}:{ch}:{cx}:{cy},scale={OUT_W}:{plan['cam_h']}:flags=lanczos,setsar=1[top];"
+            f"[a]crop={cw}:{ch}:{cx}:{cy},scale={OUT_W}:{plan['cam_h']}:flags=lanczos,unsharp=5:5:0.8:5:5:0.0,setsar=1[top];"
             f"[b]crop={gw}:{gh}:{gx}:{gy},scale={OUT_W}:{OUT_H - plan['cam_h']}:flags=lanczos,setsar=1[bot];"
             f"[top][bot]vstack=inputs=2,format=yuv420p[v]"
         )
@@ -158,7 +158,7 @@ def _filters(plan: dict) -> str:
         f"[0:v]split=2[a][b];"
         f"[a]scale={OUT_W}:{OUT_H}:force_original_aspect_ratio=increase,crop={OUT_W}:{OUT_H},"
         f"boxblur=30:3,eq=brightness=-0.08[bg];"
-        f"[b]scale={OUT_W}:-2:flags=lanczos[fg];"
+        f"[b]crop=ih*4/3:ih,scale={OUT_W}:810:flags=lanczos,unsharp=5:5:0.5:5:5:0.0[fg];"
         f"[bg][fg]overlay=(W-w)/2:(H-h)/2,setsar=1,format=yuv420p[v]"
     )
 
@@ -172,7 +172,8 @@ def render(src: Path, out: Path, plan: dict, start=None, end=None, max_len=180.0
         cmd += ["-to", str(end)]
     cmd += ["-i", str(src), "-filter_complex", _filters(plan), "-map", "[v]", "-map", "0:a?",
             "-t", str(max_len), "-r", f"{fps:g}",
-            "-c:v", "libx264", "-preset", "medium", "-crf", "20", "-profile:v", "high",
+            "-c:v", "libx264", "-preset", "slow", "-crf", "17", "-profile:v", "high",
+            "-maxrate", "16M", "-bufsize", "32M", "-pix_fmt", "yuv420p",
             "-c:a", "aac", "-b:a", "160k", "-ar", "48000",
             "-af", "loudnorm=I=-14:TP=-1.5:LRA=11",
             "-movflags", "+faststart", str(out)]
