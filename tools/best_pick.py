@@ -17,6 +17,14 @@ ap.add_argument("--irl-per-day", type=int, default=2)
 a = ap.parse_args()
 d = a.logdir / "canli"
 now = time.time()
+# ayni slotta ikinci yukleme olmasin (canli takip :07'de, yedek zamanlayici :37'de tetikler)
+for y in d.glob("2*.yayin"):
+    try:
+        ts = json.loads(y.read_text()).get("zaman", 0)
+    except Exception:
+        ts = 0
+    if now - ts < 80 * 60:
+        print("Son 80 dk icinde zaten yukleme yapildi, atlaniyor"); sys.exit(0)
 irl_done = 0
 for y in d.glob("2*.yayin"):
     cid0 = y.stem
@@ -72,7 +80,7 @@ if os.environ.get("TIKTOK_CLIENT_KEY"):
     except Exception as e:  # noqa: BLE001
         res["tiktok"] = f"HATA {e}"
 print("SONUC", json.dumps(res, ensure_ascii=False))
-(d / f"{cid}.yayin").write_text(json.dumps({"title": m["yt_title"], **res}, ensure_ascii=False))
+(d / f"{cid}.yayin").write_text(json.dumps({"title": m["yt_title"], "zaman": time.time(), **res}, ensure_ascii=False))
 if os.environ.get("GITHUB_STEP_SUMMARY"):
     open(os.environ["GITHUB_STEP_SUMMARY"], "a").write(f"### {m['yt_title']}\n" + "".join(f"- {k}: {v}\n" for k, v in res.items()))
 sys.exit(0 if not str(res.get("youtube", "")).startswith("HATA") else 1)
