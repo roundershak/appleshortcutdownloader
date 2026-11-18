@@ -397,7 +397,8 @@ class Publisher:
             arc = None if self.args.dry_run else self.archive(cid, out, kind)
             log(cid, "arsiv:", arc)
             publish = ev["score"] >= self.args.auto_publish  # Claude cevap vermezse sadece cok guclu anlar
-            if publish_log(cid, meta, jpg) and self.args.title_wait > 0:
+            # best modunda yayin sonra secilir; basligi beklemek kuyrugu tikar
+            if publish_log(cid, meta, jpg) and self.args.title_wait > 0 and self.args.publish_mode == "immediate":
                 t = wait_title(cid, self.args.title_wait)
                 if t:
                     if t.strip().upper() == "ATLA":
