@@ -1,0 +1,91 @@
+{
+ "id": "20261118-173515",
+ "score": 2.188,
+ "peak": 0.525,
+ "base": 0.15384615384615385,
+ "hype": 0.025,
+ "rage": 0.0,
+ "chat": [
+  "kıyafet alalım",
+  "kıyafet alalım",
+  "AYNEN",
+  "YOOKK",
+  "vur vur",
+  "hayır",
+  "NOLUR",
+  "AYNEN",
+  "YOOKK",
+  "vur vur",
+  "hayır",
+  "NOLUR",
+  "AYNEN",
+  "YOOKK",
+  "vur vur"
+ ],
+ "speech": [
+  [
+   0.0,
+   "Ne diyorsun ya?"
+  ],
+  [
+   1.6,
+   "Ben de bu konuda ne için ne için?"
+  ],
+  [
+   5.0,
+   "Ama ben?"
+  ],
+  [
+   6.2,
+   "Ben soğut."
+  ],
+  [
+   8.6,
+   "Evet."
+  ],
+  [
+   8.8,
+   "Oğlum onun numara saçları."
+  ],
+  [
+   10.0,
+   "Ben çok çok ya."
+  ],
+  [
+   10.8,
+   "Sıkla git."
+  ],
+  [
+   12.2,
+   "Sıkla git."
+  ],
+  [
+   25.5,
+   "Abi ben s註inliğince müller hatırladı ya."
+  ],
+  [
+   27.7,
+   "Pilates mületes."
+  ],
+  [
+   28.7,
+   "Harıza olmasın bu sen."
+  ],
+  [
+   31.3,
+   "Yollamasak mı?"
+  ],
+  [
+   32.9,
+   "Burası baran olayı ya."
+  ],
+  [
+   35.2,
+   "Yollamasak mı ya?"
+  ]
+ ],
+ "layout": "full",
+ "cam": null,
+ "fallback_title": "eray gta 6'da chat'i güldürmekten öldürdü QKFNEQOJIKGB",
+ "dur": 40.0
+}
