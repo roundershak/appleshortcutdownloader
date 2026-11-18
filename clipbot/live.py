@@ -514,6 +514,19 @@ class Publisher:
 
 
 # ---------------------------------------------------------------- ana dongu
+_last_slot = {"v": time.strftime("%Y%m%d%H", time.gmtime()) if time.gmtime().tm_min >= 7 else ""}
+
+
+def slot_tick():
+    """Yukleme saatlerinde (UTC 11,13,15,17,19,21 :07) en iyi klip secimini tetikle; yayin kapaliyken de."""
+    g = time.gmtime()
+    slot = time.strftime("%Y%m%d%H", g)
+    if g.tm_hour in (11, 13, 15, 17, 19, 21) and g.tm_min >= 7 and slot != _last_slot["v"]:
+        _last_slot["v"] = slot
+        r = subprocess.run(["gh", "workflow", "run", "best.yml", "-f", "hours=24"], capture_output=True, text=True, cwd=ROOT)
+        log("en iyi klip secimi tetiklendi", r.returncode, r.stderr[:100])
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--channel", default="eray")
@@ -545,7 +558,7 @@ def main():
     while not live:
         if time.time() > t_start + args.wait_live_hours * 3600:
             log("yayin acilmadi, cikiliyor"); return 2  # zincir devam etsin
-        log("yayin kapali, bekleniyor"); time.sleep(60)
+        log("yayin kapali, bekleniyor"); slot_tick(); time.sleep(60)
         chan_id, live, url, title = channel_state(args.channel)
     log("YAYIN ACIK:", title)
 
@@ -605,11 +618,7 @@ def main():
                     # Durma: yayin ara verdi; isleri bitir, zincir yeni calismada tekrar acilmasini bekler
                     log("yayin kapali (ara?), bekleme moduna geciliyor")
                     jobs.put(None); th.join(timeout=900); return 2
-        slot = time.strftime("%Y%m%d%H", time.gmtime())
-        if time.gmtime().tm_hour in (11, 13, 15, 17, 19, 21) and time.gmtime().tm_min >= 7 and slot != last_slot:
-            last_slot = slot
-            r = subprocess.run(["gh", "workflow", "run", "best.yml", "-f", "hours=24"], capture_output=True, text=True, cwd=ROOT)
-            log("en iyi klip secimi tetiklendi", r.returncode, r.stderr[:100])
+        slot_tick()
         if time.time() - last_state > 600:
             last_state = time.time()
             lr = det.rates(chat.win)[0] if chat.win else 0
