@@ -179,7 +179,7 @@ class Detector:
             return None
         lr, hr, rr, n = self.rates(win)
         t = win[-1][0]
-        thr = max(0.45, base + 0.22)
+        thr = max(0.45, min(base + 0.22, 0.64))  # chat surekli gulerken esik cok yukselmesin
         hot = (lr >= thr or (hr + rr) >= 0.35) and n >= 30
         if self.active is None:
             if hot and t >= self.cool_until:
@@ -546,6 +546,19 @@ def main():
             last_state = time.time()
             lr = det.rates(chat.win)[0] if chat.win else 0
             log(f"durum: kuyruk={jobs.qsize()} gulme=%{lr*100:.0f} yt={pub.yt_count} tt={pub.tt_count}")
+            try:  # Claude'un saglik kontrolu icin canli-log'a nabiz yaz
+                d = ROOT / ".canli"
+                if d.exists() or publish_log("_durum", {}, None):
+                    base = det.baseline(chat.win)
+                    (d / "canli" / "_durum.json").write_text(json.dumps({
+                        "zaman": time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime()), "kayit": rec.alive(),
+                        "gulme": round(lr, 2), "taban": round(base or 0, 2), "kuyruk": jobs.qsize(),
+                        "yt": pub.yt_count, "tt": pub.tt_count, "olay_aktif": det.active is not None}))
+                    subprocess.run(["git", "add", "-A"], cwd=d); subprocess.run(["git", "commit", "-qm", "durum"], cwd=d, capture_output=True)
+                    subprocess.run(["git", "pull", "-q", "--rebase", "origin", LOG_BRANCH], cwd=d, capture_output=True)
+                    subprocess.run(["git", "push", "-q", "origin", f"HEAD:{LOG_BRANCH}"], cwd=d, capture_output=True)
+            except Exception as e:  # noqa: BLE001
+                log("durum yazilamadi", e)
         time.sleep(2)
     log("sure doldu, zincirdeki sonraki calismaya devrediliyor")
     rec.stop(); jobs.put(None); th.join(timeout=900)
