@@ -9,18 +9,26 @@ from clipbot import kick
 spec = json.load(open(sys.argv[1])); out = Path(sys.argv[2])
 work = Path(tempfile.mkdtemp())
 # sinematik ton: kontrast, hafif sicak/kirmizi, kenar karartma
-GRADE = ("crop=ih*9/16:ih,scale=1080:1920:flags=lanczos,"
-         "eq=contrast=1.12:saturation=1.18:brightness=-0.02,"
+GRADE = ("crop=ih*9/16:ih:max(0\\,min(iw-ih*9/16\\,iw*{cx}-ih*9/32)):0,scale=1080:1920:flags=lanczos,"
+         "eq=contrast=1.15:saturation=1.2:brightness=-0.03,"
          "colorbalance=rs=0.06:gs=-0.01:bs=-0.04:rh=0.04:bh=-0.03,"
          "vignette=PI/4.5,unsharp=5:5:0.6:5:5:0.0,fps=30,format=yuv420p")
 parts = []
-for i, (a, d) in enumerate(spec["shots"]):
-    raw = kick.cut_vod(spec["vod"], a, a + d + 1, work / f"raw{i}.mp4")
+hls = kick.vod_source(spec["vod"]).rsplit("/", 1)[0] + "/1080p60/playlist.m3u8"
+for i, shot in enumerate(spec["shots"]):
+    a, d = shot[0], shot[1]
+    cx = shot[2] if len(shot) > 2 else 0.5
     p = work / f"p{i}.mp4"
-    subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", "0.5", "-i", str(raw), "-t", str(d), "-vf", GRADE,
-                    "-af", "aresample=48000", "-c:v", "libx264", "-preset", "medium", "-crf", "17",
-                    "-c:a", "aac", "-b:a", "160k", "-ar", "48000", "-ac", "2", str(p)], check=True)
-    parts.append(p); raw.unlink()
+    n = round(d * 30)
+    aud = ["-an"] if spec.get("audio", "mute") == "mute" else [
+        "-af", f"atrim=0:{n / 30},apad,atrim=0:{n / 30},aresample=48000", "-c:a", "aac", "-b:a", "160k", "-ar", "48000", "-ac", "2"]
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-ss", str(a), "-i", hls, "-frames:v", str(n), "-vf", GRADE.format(cx=cx),
+                    "-c:v", "libx264", "-preset", "medium", "-crf", "17", *aud, str(p)], check=True)
+    got = int(subprocess.run(["ffprobe", "-v", "error", "-count_frames", "-select_streams", "v", "-show_entries",
+                              "stream=nb_read_frames", "-of", "csv=p=0", str(p)], capture_output=True, text=True).stdout.strip() or 0)
+    if got != n:
+        print(f"uyari: kesit {i} {got}/{n} kare")
+    parts.append(p)
 lst = work / "l.txt"; lst.write_text("".join(f"file '{p}'\n" for p in parts))
 cmd = ["ffmpeg", "-v", "error", "-y", "-f", "concat", "-safe", "0", "-i", str(lst)]
 if spec.get("audio", "mute") == "mute":

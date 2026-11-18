@@ -3,6 +3,7 @@ name: Montaj edit
 # montaj/*.json eklenince: yayin kaydindan hizli kesmeli dikey montaj -> TikTok taslak
 on:
   push:
+    branches: [claude/apple-extension-video-download-milmr6]
     paths:
       - "montaj/*.json"
   workflow_dispatch:

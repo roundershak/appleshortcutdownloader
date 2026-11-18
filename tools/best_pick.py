@@ -42,7 +42,7 @@ for j in d.glob("2*.json"):
     t = datetime.strptime(cid, "%Y%m%d-%H%M%S").replace(tzinfo=timezone.utc).timestamp()
     if now - t > a.hours * 3600:
         # eski klip: sadece 5/5 seviyesi (Claude 'efsane' isaretlediyse ya da skor cok yuksekse)
-        sk = json.loads(f.read_text()).get("score", 0) if f.exists() else 0
+        sk = json.loads(j.read_text()).get("score", 0)
         if not (now - t <= a.efsane_hours * 3600 and ((d / f"{cid}.efsane").exists() or sk >= a.efsane_skor)):
             continue
     meta = json.loads(j.read_text())
@@ -84,8 +84,10 @@ res = {}
 from clipbot import overlay
 yt_file = tt_file = out
 try:
-    yt_file = overlay.make(out, work / "yt.mp4", title, 2160, 3840, crf=16)
-    tt_file = overlay.make(out, work / "tt.mp4", title, 1080, 1920, crf=18)
+    kf = d / f"{cid}.kirp"  # elle kesilen klip: "bas sure" (varsayilan 16 24)
+    ks, kl = (float(x) for x in kf.read_text().split()) if kf.exists() else (16, 24)
+    yt_file = overlay.make(out, work / "yt.mp4", title, 2160, 3840, start=ks, length=kl, crf=16)
+    tt_file = overlay.make(out, work / "tt.mp4", title, 1080, 1920, start=ks, length=kl, crf=18)
     print("hook + yazi hazir:", round(yt_file.stat().st_size / 1e6), "MB (4K)")
 except Exception as e:  # noqa: BLE001
     print("yazi/kirpma yapilamadi, orijinal yuklenecek:", e)

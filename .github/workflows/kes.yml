@@ -1,0 +1,48 @@
+name: Elle klip
+
+# kes/*.json eklenince: yayin kaydindan keser, arsive koyar, canli-log'a onayli aday yazar (best.yml yukler)
+on:
+  push:
+    branches: [claude/apple-extension-video-download-milmr6]
+    paths:
+      - "kes/*.json"
+  workflow_dispatch:
+    inputs:
+      spec:
+        description: "kes/ altindaki spec"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  kes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Spec bul
+        id: s
+        run: |
+          if [ -n "${{ github.event.inputs.spec }}" ]; then f="${{ github.event.inputs.spec }}"
+          else f=$(git diff --name-only --diff-filter=A "${{ github.event.before }}" "${{ github.sha }}" -- 'kes/*.json' 2>/dev/null || git diff-tree --no-commit-id --name-only --diff-filter=A -r HEAD -- 'kes/*.json'); fi
+          echo "files=$(echo $f | tr '\n' ' ')" >> "$GITHUB_OUTPUT"; echo "Islenecek: $f"
+      - uses: actions/setup-python@v5
+        if: steps.s.outputs.files != ''
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Kurulum
+        if: steps.s.outputs.files != ''
+        run: |
+          command -v ffmpeg >/dev/null || (sudo apt-get update -q && sudo apt-get install -y -q ffmpeg)
+          pip install -q -r requirements.txt
+      - name: Kes ve arsivle
+        if: steps.s.outputs.files != ''
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT || github.token }}
+        run: |
+          git config --global user.name klip-bot; git config --global user.email klip-bot@users.noreply.github.com
+          for f in ${{ steps.s.outputs.files }}; do python tools/manual_clip.py "$f"; done
