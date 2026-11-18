@@ -80,7 +80,7 @@ class Recorder:
         self.proc = subprocess.Popen(
             ["ffmpeg", "-v", "error", "-i", self.url, "-map", "0:p:0:v", "-map", "0:p:0:a", "-sn", "-dn",
              "-c", "copy", "-f", "hls",
-             "-hls_time", "4", "-hls_list_size", "90", "-hls_flags", "delete_segments+program_date_time",
+             "-hls_time", "4", "-hls_list_size", "150", "-hls_flags", "delete_segments+program_date_time",
              "-hls_segment_filename", str(self.dir / f"r{self.n}_%06d.ts"), str(pl)])
         log("kayit basladi", pl.name)
 
@@ -106,6 +106,18 @@ class Recorder:
                         out.append((pdt, pdt + dur, f))
                     pdt = None
         return out
+
+    def loudness(self, n=2):
+        """Son n segmentin ortalama ses seviyesi (dB)."""
+        segs = self.segments()[-n:]
+        vals = []
+        for _, _, f in segs:
+            r = subprocess.run(["ffmpeg", "-v", "info", "-i", str(f), "-vn", "-af", "volumedetect", "-f", "null", "-"],
+                               capture_output=True, text=True)
+            m = re.search(r"mean_volume: (-?[\d.]+) dB", r.stderr)
+            if m:
+                vals.append(float(m.group(1)))
+        return sum(vals) / len(vals) if vals else None
 
     def cut(self, a, b, out: Path):
         segs = [s for s in self.segments() if s[1] > a and s[0] < b]
@@ -327,13 +339,13 @@ class Publisher:
         # kamera kutusu yok (IRL, tam ekran video, kamera kapali) -> bulanik arka planli tam ekran
         return {"layout": "full"}
 
-    def handle(self, ev, rec: Recorder):
+    def grab(self, ev, rec: Recorder):
+        """Olay biter bitmez ham kesiti kayittan al (hizli, -c copy)."""
         cid = datetime.fromtimestamp(ev["t0"], timezone.utc).strftime("%Y%m%d-%H%M%S")
         a = ev["t0"] - 30
         b = min(max(ev["t0"] + 8, ev["t1"] - 12), a + 42)
         if b - a < 30:
             b = a + 32
-        # kayit b'yi kapsayana kadar bekle
         for _ in range(30):
             segs = rec.segments()
             if segs and segs[-1][1] >= b + 2:
@@ -342,7 +354,17 @@ class Publisher:
         d = WORK / cid
         d.mkdir(parents=True, exist_ok=True)
         try:
-            src = rec.cut(a, b, d / "src.mp4")
+            ev["src"] = rec.cut(a, b, d / "src.mp4")
+        except Exception as e:  # noqa: BLE001
+            log(cid, "kesit alinamadi", e); ev["src"] = None
+        ev["cid"], ev["a"], ev["b"] = cid, a, b
+        return ev
+
+    def handle(self, ev, rec: Recorder):
+        cid, a, b = ev["cid"], ev["a"], ev["b"]
+        d = WORK / cid
+        try:
+            src = ev.get("src")
             if not src:
                 log(cid, "kayitta bu aralik yok, atlandi")
                 return
@@ -493,6 +515,7 @@ def main():
     ap.add_argument("--publish-mode", default="best", choices=["best", "immediate"],
                     help="best: 4 saatte bir en iyi klip yuklenir (best.yml); immediate: aninda")
     ap.add_argument("--auto-publish", type=float, default=2.8, help="Claude cevap vermezse bu skorun ustu yayinlanir")
+    ap.add_argument("--shout-db", type=float, default=9.0, help="ses ortalamanin bu kadar dB ustune cikarsa olay")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
 
@@ -526,12 +549,33 @@ def main():
     th = threading.Thread(target=worker, daemon=True); th.start()
     offline_since = None
     last_state = 0
+    last_loud, loud_hist, shout_hits = 0, deque(maxlen=225), 0
     while time.time() < deadline:
         chat.poll()
         if chat.win:
             ev = det.step(chat.win)
             if ev:
-                jobs.put(ev)
+                threading.Thread(target=lambda e=ev: jobs.put(pub.grab(e, rec)), daemon=True).start()
+        # Eray'in bagirmasi / ani ses patlamasi (OHAAA anlari): chat tetiklemese de yakala
+        if rec.alive() and time.time() - last_loud > 8:
+            last_loud = time.time()
+            lv = rec.loudness()
+            if lv is not None:
+                loud_hist.append(lv)
+                med = median(loud_hist) if len(loud_hist) >= 30 else None
+                if med is not None and lv - med >= args.shout_db and det.active is None and time.time() >= det.cool_until:
+                    shout_hits += 1
+                    if shout_hits >= 2:
+                        now = time.time() - 4
+                        lr, hr, rr, n = det.rates(chat.win) if chat.win else (0, 0, 0, 0)
+                        ev = {"t0": now - 10, "t1": now + 10, "peak": lr, "base": det.baseline(chat.win) or 0,
+                              "hype": hr, "rage": rr, "texts": [], "score": round(1.5 + (lv - med) / 10 + lr, 3), "shout": round(lv - med, 1)}
+                        log(f"SES PATLAMASI +{lv - med:.1f} dB")
+                        det.cool_until = time.time() + 45
+                        shout_hits = 0
+                        threading.Thread(target=lambda e=ev: (time.sleep(12), jobs.put(pub.grab(e, rec))), daemon=True).start()
+                else:
+                    shout_hits = 0
         if not rec.alive():
             time.sleep(min(60, 5 * rec.n))  # art arda hata olursa yavasla
             _, live, url, _ = channel_state(args.channel)

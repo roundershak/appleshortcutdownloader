@@ -16,11 +16,11 @@ import re
 from statistics import median
 
 LAUGH_EMOTES = re.compile(r"\[emote:\d+:[^\]]*(KEKW|LULW|LUL|OMEGALUL|ICANT|KEKLEO|kekw|haha|HAHA|Laugh|LAUGH|xd|XD|pepeLaugh|KEKL)[^\]]*\]")
-HYPE_EMOTES = re.compile(r"\[emote:\d+:[^\]]*(OOOO|NOWAY|Astonished|POGGERS|Pog|monkaS|Shock|WAJAJA)[^\]]*\]")
+HYPE_EMOTES = re.compile(r"\[emote:\d+:[^\]]*(OOOO|NOWAY|Astonished|POGGERS|Pog|monkaS|Shock|WAJAJA|HYPERCLAP|Clap|CLAP|WOW|Wow|GIGACHAD|Gigachad|PogChamp)[^\]]*\]")
 RAGE_EMOTES = re.compile(r"\[emote:\d+:[^\]]*(Angry|RAGE|Rage|Mad|WeirdChamp|BRUH)[^\]]*\]")
 EMOTE = re.compile(r"\[emote:\d+:[^\]]+\]")
 LAUGH_TXT = re.compile(r"(😂|🤣|💀|\b(?:a?ha){3,}|\b(?:j?s){3,}j?|\bxd+\b|\b(?:sj|js|aj|ja|ks|sk){3,}|kekw|asdas|sdfs|ksdj|lksd|sjsj|ajaj|ğsl|şlsd)", re.I)
-HYPE_TXT = re.compile(r"\b(oha+|ooo+|alt ?f4|noluyo|yok art[iı]k|helal|efsane|clip+|klip)\b|[!?]{3,}", re.I)
+HYPE_TXT = re.compile(r"\b(oha+|ooo+|vay+|wow+|alt ?f4|noluyo|yok art[iı]k|helal|efsane|clip+|klip|inanılmaz|inanilmaz|gta ?6|çıldır)\b|[!?]{3,}", re.I)
 RAGE_TXT = re.compile(r"(sinir|kavga|kufur|küfür|sövd|sov|bagir|bağır|cildir|çıldır|delir|kopt|kafayi|kafayı|masaya|monit[oö]r|ragele|tilt|toxic|t[oö]ksik)", re.I)
 VOWELS = set("aeıioöuüAEIİOÖUÜ")
 
