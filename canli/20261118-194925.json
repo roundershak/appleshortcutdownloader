@@ -1,0 +1,75 @@
+{
+ "id": "20261118-194925",
+ "score": 0.709,
+ "peak": 0.13157894736842105,
+ "base": 0.15894736842105261,
+ "hype": 0.4222222222222222,
+ "rage": 0.023255813953488372,
+ "chat": [
+  "bi olay olduğunda hep hariyafa gözüküyo bak oraya hep",
+  "AYİN Mİ VAR",
+  "ayin var",
+  "böyle bi oyunda böyle görev ne alaka mesela resident eevil mi oynuyoz",
+  "OHA",
+  "VECTOR AQ",
+  "jumpscare geldi",
+  "BU NE HACI,",
+  "Savaş abiiiiiiiii",
+  "VECTOR AQ",
+  "jumpscare geldi",
+  "BU NE HACI,",
+  "Savaş abiiiiiiiii",
+  "VECTOR AQ",
+  "jumpscare geldi"
+ ],
+ "speech": [
+  [
+   0.1,
+   "Arkamızda arkamızda"
+  ],
+  [
+   2.1,
+   "Bir de yap"
+  ],
+  [
+   4.1,
+   "Sesini de versene o zaman"
+  ],
+  [
+   10.4,
+   "Solu ne radyo"
+  ],
+  [
+   12.4,
+   "Bu şey bulmuş mu benim"
+  ],
+  [
+   14.4,
+   "Timsah falan çıkmaz o zaman"
+  ],
+  [
+   27.2,
+   "Şimdi var Timsah beni öldürür"
+  ],
+  [
+   29.2,
+   "Ben de bu elemanı öldürürüm"
+  ],
+  [
+   31.2,
+   "Bu ne?"
+  ],
+  [
+   33.2,
+   "Bu ne lan?"
+  ],
+  [
+   35.2,
+   "Bu ne oğlu o?"
+  ]
+ ],
+ "layout": "full",
+ "cam": null,
+ "fallback_title": "eray gta 6'da böyle bir şey görmedi!!",
+ "dur": 40.0
+}
