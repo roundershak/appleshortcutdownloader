@@ -38,7 +38,7 @@ def build_meta(job: dict, info: kick.ClipInfo, s: dict) -> dict:
     if display and display.lower() not in yt_title.lower():
         yt_title = f"{title} | {display} #shorts"
     credit = f"Yayıncı: https://kick.com/{channel}" if channel else ""
-    desc = "\n".join(x for x in [title, "", credit, "", " ".join(hashtags + ["#shorts"])] if x is not None)
+    desc = s.get("yt_description") or "\n".join(x for x in [title, "", credit, "", " ".join(hashtags + ["#shorts"])] if x is not None)
     caption = job.get("caption") or f"{title} {' '.join(hashtags)}"
     return {"yt_title": yt_title[:100], "description": desc, "tags": tags, "caption": caption}
 
