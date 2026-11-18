@@ -13,7 +13,7 @@ from clipbot.kick import ClipInfo  # noqa: E402
 ap = argparse.ArgumentParser()
 ap.add_argument("logdir", type=Path)
 ap.add_argument("--hours", type=float, default=24)
-ap.add_argument("--irl-per-day", type=int, default=1)
+ap.add_argument("--irl-per-day", type=int, default=2)
 a = ap.parse_args()
 d = a.logdir / "canli"
 now = time.time()
@@ -40,7 +40,7 @@ for j in d.glob("2*.json"):
         continue
     kind = "oyun" if meta.get("layout") == "split" else "irl"
     if kind == "irl" and irl_done >= a.irl_per_day:
-        continue  # gunde 5 oyun + 1 IRL
+        continue  # gunde en fazla 2 IRL, en az 4 oyun
     # Claude'un onayladigi (baslik yazdigi) klipler once, sonra skor
     cands.append((1 if title else 0, meta.get("score", 0), cid, title or meta.get("fallback_title"), son["arsiv"]))
 if not cands:
