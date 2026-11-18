@@ -624,7 +624,7 @@ def main():
                     log("yayin kapali (ara?), bekleme moduna geciliyor")
                     # gunun son klibi: yayin bitince yuklenir
                     hh = time.gmtime().tm_hour
-                    if hh >= 19 or hh < 6:  # gece bitisi (TR 22:00 sonrasi); gun ici molalarda degil
+                    if hh >= 16 or hh < 6:  # aksam/gece bitisi (TR 19:00 sonrasi; erken acilan yayinlar icin); gun ici molalarda degil
                         r = subprocess.run(["gh", "workflow", "run", "best.yml", "-f", "hours=24"], capture_output=True, text=True, cwd=ROOT)
                         log("yayin bitti -> son klip secimi tetiklendi", r.returncode)
                     jobs.put(None); th.join(timeout=900); return 2
