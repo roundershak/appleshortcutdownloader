@@ -182,6 +182,11 @@ class Detector:
             lrs.append(sum(x[2] for x in seg) / n)
         return median(lrs) if lrs else None
 
+    def hype_base(self, win):
+        w = list(win)[-120:]
+        vals = [x[3] / max(1, x[1]) for x in w]
+        return median(vals) if vals else 0
+
     def step(self, win):
         """Biten olay varsa dondurur."""
         if len(win) < self.k:
@@ -192,7 +197,8 @@ class Detector:
         lr, hr, rr, n = self.rates(win)
         t = win[-1][0]
         thr = max(0.45, base + 0.22)
-        hot = (lr >= thr or (hr + rr) >= 0.35) and n >= 30
+        hb = self.hype_base(win)
+        hot = (lr >= thr or (hr + rr) >= max(0.35, hb + 0.3)) and n >= 30
         if self.active is None:
             if hot and t >= self.cool_until:
                 start = win[-self.k][0]
