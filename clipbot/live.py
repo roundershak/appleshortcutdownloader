@@ -385,7 +385,8 @@ class Publisher:
                     "rage": ev["rage"], "chat": ev["texts"][:15], "speech": lines, "layout": plan["layout"],
                     "cam": plan["cam"], "fallback_title": title, "dur": round(b - a, 1)}
             log(cid, "hazir", json.dumps({k: meta[k] for k in ("score", "layout", "fallback_title")}, ensure_ascii=False))
-            arc = None if self.args.dry_run else self.archive(cid, out)
+            kind = "oyun" if plan["layout"] == "split" else "irl"
+            arc = None if self.args.dry_run else self.archive(cid, out, kind)
             log(cid, "arsiv:", arc)
             publish = ev["score"] >= self.args.auto_publish  # Claude cevap vermezse sadece cok guclu anlar
             if publish_log(cid, meta, jpg) and self.args.title_wait > 0:
@@ -405,12 +406,12 @@ class Publisher:
         finally:
             shutil.rmtree(d, ignore_errors=True)
 
-    def archive(self, cid, out):
-        """Her klibi (yuklensin ya da yuklenmesin) gunluk arsiv Release'ine koyar."""
-        tag = "arsiv-" + cid[:8]
+    def archive(self, cid, out, kind="oyun"):
+        """Her klibi gunluk arsive koyar: oyun-YYYYMMDD / irl-YYYYMMDD."""
+        tag = f"{kind}-" + cid[:8]
         try:
             if subprocess.run(["gh", "release", "view", tag], capture_output=True).returncode != 0:
-                subprocess.run(["gh", "release", "create", tag, "--prerelease", "-t", f"Klip arsivi {cid[:8]}",
+                subprocess.run(["gh", "release", "create", tag, "--prerelease", "-t", f"{'Oyun' if kind == 'oyun' else 'IRL'} klipleri {cid[:8]}",
                                 "-n", "Canli takipte kesilen tum klipler"], capture_output=True, check=True)
             asset = Path(out).with_name(f"{cid}.mp4")
             shutil.copy(out, asset)

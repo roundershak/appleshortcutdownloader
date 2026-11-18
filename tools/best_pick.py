@@ -38,7 +38,7 @@ for j in d.glob("2*.json"):
     title = title_f.read_text().strip() if title_f.exists() else None
     if title and title.upper() == "ATLA":
         continue
-    if (d / f"{cid}.yayin").exists() or not str(son.get("arsiv", "")).startswith("arsiv-"):
+    if (d / f"{cid}.yayin").exists() or not str(son.get("arsiv", "")).startswith(("arsiv-", "oyun-", "irl-")):
         continue
     tur_f = d / f"{cid}.tur"  # Claude'un isaretledigi tur, yoksa duzenden tahmin
     kind = tur_f.read_text().strip() if tur_f.exists() else ("oyun" if meta.get("layout") == "split" else "irl")
