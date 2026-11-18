@@ -7,6 +7,7 @@ while true; do
   git -C "$D" fetch -q origin canli-log 2>/dev/null && git -C "$D" reset -q --hard origin/canli-log
   for f in "$D"/canli/*.json; do
     [ -e "$f" ] || continue
+    case "$(basename $f)" in _*) continue;; esac
     id=$(basename "$f" .json)
     [ -e "$D/canli/$id.title" ] || [ -e "$D/canli/$id.sonuc" ] && continue
     case " $seen " in *" $id "*) continue;; esac
