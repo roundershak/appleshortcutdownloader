@@ -39,7 +39,8 @@ def make(src: Path, out: Path, title: str, w: int, h: int, start: float = 16.0, 
         tfs.append(tf)
         draws.append(f"drawtext=fontfile={font()}:textfile={tf}:fontsize={fs}:fontcolor=white:borderw={max(4, fs // 12)}:"
                      f"bordercolor=black:x=(w-text_w)/2:y={y0 + i * int(fs * 1.2)}")
-    vf = ",".join([f"scale={w}:{h}:flags=lanczos,unsharp=5:5:0.5:5:5:0.0"] + draws)
+    # kullanici istegi: videonun ustune yazi yazma (sadece olcekle + kirp)
+    vf = f"scale={w}:{h}:flags=lanczos,unsharp=5:5:0.5:5:5:0.0"
     dur = float(subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", str(src)],
                                capture_output=True, text=True).stdout.strip() or 0)
     ss = start if dur >= start + length - 2 else max(0.0, dur - length)
