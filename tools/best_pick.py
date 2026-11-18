@@ -12,7 +12,7 @@ from clipbot.kick import ClipInfo  # noqa: E402
 
 ap = argparse.ArgumentParser()
 ap.add_argument("logdir", type=Path)
-ap.add_argument("--hours", type=float, default=24)
+ap.add_argument("--hours", type=float, default=36)
 ap.add_argument("--irl-per-day", type=int, default=2)
 a = ap.parse_args()
 d = a.logdir / "canli"
@@ -56,7 +56,14 @@ for j in d.glob("2*.json"):
     cands.append((1 if title else 0, meta.get("score", 0), cid, title or meta.get("fallback_title"), son["arsiv"]))
 if not cands:
     print("Bu pencerede yayinlanacak klip yok"); sys.exit(0)
-cands.sort(reverse=True)
+# IRL saatleri (TR 16:07 ve 22:07 = UTC 13, 19): onayli IRL klibi varsa o yuklenir
+irl_slot = time.gmtime().tm_hour in (13, 19)
+if irl_slot and irl_done < a.irl_per_day:
+    irl_c = [c for c in cands if c[0] and (d / f"{c[2]}.tur").exists() and (d / f"{c[2]}.tur").read_text().strip() == "irl"]
+    if irl_c:
+        print("IRL saati: IRL klibi seciliyor")
+        cands = irl_c
+cands.sort(key=lambda c: (c[0], c[1]), reverse=True)
 ok_, score, cid, title, asset = cands[0]
 print(f"son 24 saatte yayinlanan IRL: {irl_done}")
 print(f"SECILEN: {cid} skor={score} onayli={bool(ok_)} baslik={title}  (aday sayisi {len(cands)})")

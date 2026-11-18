@@ -6,7 +6,7 @@ on:
     - cron: "37 11,13,15,17,19,21 * * *"   # yedek: canli takip de :07de tetikler   # TR 14:07, 16:07, 18:07, 20:07, 22:07, 00:07
   workflow_dispatch:
     inputs:
-      hours: {description: "Kac saatlik pencere", default: "24"}
+      hours: {description: "Kac saatlik pencere", default: "36"}
 
 concurrency:
   group: best-pick
@@ -40,7 +40,7 @@ jobs:
           TIKTOK_REFRESH_TOKEN: ${{ secrets.TIKTOK_REFRESH_TOKEN }}
           GH_PAT: ${{ secrets.GH_PAT }}
           GH_TOKEN: ${{ github.token }}
-        run: python tools/best_pick.py .canli --hours "${{ github.event.inputs.hours || '24' }}"
+        run: python tools/best_pick.py .canli --hours "${{ github.event.inputs.hours || '36' }}"
       - name: Kaydet
         if: always()
         run: |
