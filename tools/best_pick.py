@@ -68,18 +68,15 @@ s = load_streamers(); cfg = {**s["_default"], **s["eray"]}
 m = build_meta({"title": title, "hashtags": ["gta6", "gtavi"], "tags": ["gta 6", "gta vi", "eray gta 6"]},
                ClipInfo(url="", channel="eray"), cfg)
 res = {}
-# YouTube icin 4K'ya cikar: YouTube 4K yuklemeleri VP9 + yuksek bitrate ile isler (1080p'de bile daha net)
-yt_file = out
+# Hook: olay anina kirp (24 sn) + ustune buyuk baslik yazisi. YouTube 4K, TikTok 1080p.
+from clipbot import overlay
+yt_file = tt_file = out
 try:
-    up = work / "yt_4k.mp4"
-    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(out), "-vf",
-                    "scale=2160:3840:flags=lanczos,unsharp=5:5:0.6:5:5:0.0", "-c:v", "libx264", "-preset", "medium",
-                    "-crf", "16", "-profile:v", "high", "-pix_fmt", "yuv420p", "-c:a", "copy",
-                    "-movflags", "+faststart", str(up)], check=True)
-    yt_file = up
-    print("4K hazir:", round(up.stat().st_size / 1e6), "MB")
+    yt_file = overlay.make(out, work / "yt.mp4", title, 2160, 3840, crf=16)
+    tt_file = overlay.make(out, work / "tt.mp4", title, 1080, 1920, crf=18)
+    print("hook + yazi hazir:", round(yt_file.stat().st_size / 1e6), "MB (4K)")
 except Exception as e:  # noqa: BLE001
-    print("4K yapilamadi, 1080p yuklenecek:", e)
+    print("yazi/kirpma yapilamadi, orijinal yuklenecek:", e)
 try:
     from clipbot import youtube
     res["youtube"] = youtube.upload(yt_file, m["yt_title"], m["description"], m["tags"])
@@ -88,7 +85,7 @@ except Exception as e:  # noqa: BLE001
 if os.environ.get("TIKTOK_CLIENT_KEY"):
     try:
         from clipbot import tiktok
-        res["tiktok"] = tiktok.upload(out, m["caption"], mode="draft")
+        res["tiktok"] = tiktok.upload(tt_file, m["caption"], mode="draft")
     except Exception as e:  # noqa: BLE001
         res["tiktok"] = f"HATA {e}"
 print("SONUC", json.dumps(res, ensure_ascii=False))
