@@ -1,0 +1,48 @@
+name: En iyi klip yukle
+
+# Gunde 6 kez (4 saatte bir): son 4 saatin en iyi klibini YouTube + TikTok taslak
+on:
+  schedule:
+    - cron: "7 1,5,9,13,17,21 * * *"   # TR 04:07, 08:07, 12:07, 16:07, 20:07, 00:07
+  workflow_dispatch:
+    inputs:
+      hours: {description: "Kac saatlik pencere", default: "4.5"}
+
+concurrency:
+  group: best-pick
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  pick:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -q -r requirements.txt
+      - name: canli-log
+        run: git fetch -q origin canli-log && git worktree add -q .canli origin/canli-log
+      - name: Sec ve yukle
+        env:
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+          TIKTOK_CLIENT_KEY: ${{ secrets.TIKTOK_CLIENT_KEY }}
+          TIKTOK_CLIENT_SECRET: ${{ secrets.TIKTOK_CLIENT_SECRET }}
+          TIKTOK_REFRESH_TOKEN: ${{ secrets.TIKTOK_REFRESH_TOKEN }}
+          GH_PAT: ${{ secrets.GH_PAT }}
+          GH_TOKEN: ${{ github.token }}
+        run: python tools/best_pick.py .canli --hours "${{ github.event.inputs.hours || '4.5' }}"
+      - name: Kaydet
+        if: always()
+        run: |
+          cd .canli
+          git config user.name klip-bot; git config user.email klip-bot@users.noreply.github.com
+          git add -A && git commit -qm "en iyi klip yayini" || exit 0
+          for i in 1 2 3; do git pull -q --rebase origin canli-log && git push -q origin HEAD:canli-log && break; done

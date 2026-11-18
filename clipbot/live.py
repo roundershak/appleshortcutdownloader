@@ -179,7 +179,7 @@ class Detector:
             return None
         lr, hr, rr, n = self.rates(win)
         t = win[-1][0]
-        thr = max(0.45, min(base + 0.22, 0.64))  # chat surekli gulerken esik cok yukselmesin
+        thr = max(0.45, base + 0.22)
         hot = (lr >= thr or (hr + rr) >= 0.35) and n >= 30
         if self.active is None:
             if hot and t >= self.cool_until:
@@ -367,11 +367,11 @@ class Publisher:
                         publish = False
                     else:
                         title, publish = t, True
-            if publish:
+            if publish and self.args.publish_mode == "immediate":
                 self.upload(cid, out, title, ev)
             else:
-                log(cid, "sadece arsivlendi (en iyi anlardan degil)")
-                self.note(cid, {"title": title, "arsiv": arc, "yayin": "yok"})
+                log(cid, "arsivlendi; en iyi secimi (4 saatte bir) bekliyor")
+                self.note(cid, {"title": title, "arsiv": arc, "score": ev["score"], "yayin": "bekliyor"})
         except Exception as e:  # noqa: BLE001
             log(cid, "HATA", e)
         finally:
@@ -490,6 +490,8 @@ def main():
     ap.add_argument("--yt-gap", type=float, default=60, help="YouTube yuklemeleri arasi min dk")
     ap.add_argument("--yt-strong", type=float, default=2.6)
     ap.add_argument("--tt-daily", type=int, default=5)
+    ap.add_argument("--publish-mode", default="best", choices=["best", "immediate"],
+                    help="best: 4 saatte bir en iyi klip yuklenir (best.yml); immediate: aninda")
     ap.add_argument("--auto-publish", type=float, default=2.8, help="Claude cevap vermezse bu skorun ustu yayinlanir")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
