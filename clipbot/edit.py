@@ -187,3 +187,22 @@ def preview(src: Path, out: Path, plan: dict, at: float | None = None) -> Path:
            "-frames:v", "1", str(out)]
     subprocess.run(cmd, check=True)
     return out
+
+
+def box_edge_score(img, c):
+    """Kamera kutusu gercek bir cerceve mi? Kenarlarda keskin duz cizgi orani (0-1)."""
+    import cv2
+    import numpy as np
+    g = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY).astype(int)
+    H, W = g.shape
+    x, y, w, h = [int(v) for v in c]
+    sc = []
+    if x + w + 3 < W:
+        sc.append((np.abs(g[y + 5:y + h - 5, x + w + 2] - g[y + 5:y + h - 5, x + w - 3]) > 18).mean())
+    if x > 3:
+        sc.append((np.abs(g[y + 5:y + h - 5, x - 3] - g[y + 5:y + h - 5, x + 2]) > 18).mean())
+    if y > 3:
+        sc.append((np.abs(g[y - 3, x + 5:x + w - 5] - g[y + 2, x + 5:x + w - 5]) > 18).mean())
+    if y + h + 3 < H:
+        sc.append((np.abs(g[y + h + 2, x + 5:x + w - 5] - g[y + h - 3, x + 5:x + w - 5]) > 18).mean())
+    return float(min(sc)) if sc else 0.0

@@ -322,6 +322,7 @@ class Publisher:
         casc = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
         cands = [edit._frac(c, W, H) for c in self.cfg.get("cam_candidates", [])]
         hits = [0] * len(cands)
+        edges = [[] for _ in cands]
         n = 12
         cap = cv2.VideoCapture(str(src))
         for i in range(n):
@@ -331,6 +332,7 @@ class Publisher:
                 continue
             for j, (x, y, w, h) in enumerate(cands):
                 x, y, w, h = int(x), int(y), int(w), int(h)
+                edges[j].append(edge_score := edit.box_edge_score(fr, (x, y, w, h)))
                 roi = cv2.equalizeHist(cv2.cvtColor(fr[y:y + h, x:x + w], cv2.COLOR_BGR2GRAY))
                 faces = casc.detectMultiScale(roi, 1.1, 5, minSize=(int(H * 0.035), int(H * 0.035)),
                                               maxSize=(int(H * 0.14), int(H * 0.14)))
@@ -339,8 +341,9 @@ class Publisher:
         cap.release()
         if cands:
             j = max(range(len(cands)), key=lambda k: hits[k])
-            log("kamera adaylari:", hits)
-            if hits[j] >= n * 0.6:
+            e = median(edges[j]) if edges[j] else 0
+            log("kamera adaylari:", hits, "cerceve:", round(e, 2))
+            if hits[j] >= n * 0.6 and e >= 0.45:  # yuz + gercek kamera cercevesi
                 return {"cam": self.cfg["cam_candidates"][j]}
         # kamera kutusu yok (IRL, tam ekran video, kamera kapali) -> bulanik arka planli tam ekran
         return {"layout": "full"}
