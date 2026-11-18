@@ -117,6 +117,13 @@ def plan_layout(src: Path, cam=None, game=None, layout="auto", cam_h=DEFAULT_CAM
 
     if game:
         g = fit_region(*_frac(game, W, H), game_aspect, W, H)
+    elif cam and layout != "full":
+        # oyun kirpmasi kamera kutusunu icermesin: kameranin olmadigi taraftan al
+        cx, cy, cw_, ch_ = _frac(cam, W, H)
+        if cx + cw_ / 2 > W / 2:
+            g = fit_region(0, 0, cx, H, game_aspect, W, H)
+        else:
+            g = fit_region(cx + cw_, 0, W - cx - cw_, H, game_aspect, W, H)
     else:
         g = fit_region(0, 0, W, H, game_aspect, W, H)
 

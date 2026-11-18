@@ -340,9 +340,14 @@ class Publisher:
                     hits[j] += 1
         cap.release()
         if cands:
+            em = [median(x) if x else 0 for x in edges]
+            # 1) net kamera cercevesi (kalabalik kamerada yuz bulunamasa da)
+            jb = max(range(len(cands)), key=lambda k: em[k])
+            log("kamera adaylari: yuz", hits, "cerceve", [round(x, 2) for x in em])
+            if em[jb] >= 0.5:
+                return {"cam": self.cfg["cam_candidates"][jb]}
             j = max(range(len(cands)), key=lambda k: hits[k])
-            e = median(edges[j]) if edges[j] else 0
-            log("kamera adaylari:", hits, "cerceve:", round(e, 2))
+            e = em[j]
             if hits[j] >= n * 0.6 and e >= 0.45:  # yuz + gercek kamera cercevesi
                 return {"cam": self.cfg["cam_candidates"][j]}
         # kamera kutusu yok (IRL, tam ekran video, kamera kapali) -> bulanik arka planli tam ekran
