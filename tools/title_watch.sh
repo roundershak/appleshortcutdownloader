@@ -9,7 +9,7 @@ while true; do
     [ -e "$f" ] || continue
     case "$(basename $f)" in _*) continue;; esac
     id=$(basename "$f" .json)
-    [ -e "$D/canli/$id.title" ] || [ -e "$D/canli/$id.sonuc" ] && continue
+    [ -e "$D/canli/$id.title" ] && continue
     case " $seen " in *" $id "*) continue;; esac
     seen="$seen $id"
     echo "YENI_KLIP $id $(python3 -c "import json,sys;d=json.load(open('$f'));print(d['fallback_title'],'| skor',d['score'])")"

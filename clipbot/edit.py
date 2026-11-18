@@ -158,7 +158,7 @@ def _filters(plan: dict) -> str:
         f"[0:v]split=2[a][b];"
         f"[a]scale={OUT_W}:{OUT_H}:force_original_aspect_ratio=increase,crop={OUT_W}:{OUT_H},"
         f"boxblur=30:3,eq=brightness=-0.08[bg];"
-        f"[b]crop=ih*4/3:ih,scale={OUT_W}:810:flags=lanczos,unsharp=5:5:0.5:5:5:0.0[fg];"
+        f"[b]crop=ih*4/3:ih:iw-ih*4/3:0,scale={OUT_W}:810:flags=lanczos,unsharp=5:5:0.5:5:5:0.0[fg];"
         f"[bg][fg]overlay=(W-w)/2:(H-h)/2,setsar=1,format=yuv420p[v]"
     )
 
