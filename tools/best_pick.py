@@ -12,10 +12,18 @@ from clipbot.kick import ClipInfo  # noqa: E402
 
 ap = argparse.ArgumentParser()
 ap.add_argument("logdir", type=Path)
-ap.add_argument("--hours", type=float, default=4.5)
+ap.add_argument("--hours", type=float, default=24)
+ap.add_argument("--irl-per-day", type=int, default=1)
 a = ap.parse_args()
 d = a.logdir / "canli"
 now = time.time()
+irl_done = 0
+for y in d.glob("2*.yayin"):
+    cid0 = y.stem
+    t0 = datetime.strptime(cid0, "%Y%m%d-%H%M%S").replace(tzinfo=timezone.utc).timestamp()
+    j0 = d / f"{cid0}.json"
+    if now - t0 < 24 * 3600 and j0.exists() and json.loads(j0.read_text()).get("layout") != "split":
+        irl_done += 1
 cands = []
 for j in d.glob("2*.json"):
     cid = j.stem
@@ -30,12 +38,16 @@ for j in d.glob("2*.json"):
         continue
     if (d / f"{cid}.yayin").exists() or not str(son.get("arsiv", "")).startswith("arsiv-"):
         continue
+    kind = "oyun" if meta.get("layout") == "split" else "irl"
+    if kind == "irl" and irl_done >= a.irl_per_day:
+        continue  # gunde 5 oyun + 1 IRL
     # Claude'un onayladigi (baslik yazdigi) klipler once, sonra skor
     cands.append((1 if title else 0, meta.get("score", 0), cid, title or meta.get("fallback_title"), son["arsiv"]))
 if not cands:
     print("Bu pencerede yayinlanacak klip yok"); sys.exit(0)
 cands.sort(reverse=True)
 ok_, score, cid, title, asset = cands[0]
+print(f"son 24 saatte yayinlanan IRL: {irl_done}")
 print(f"SECILEN: {cid} skor={score} onayli={bool(ok_)} baslik={title}  (aday sayisi {len(cands)})")
 tag, name = asset.split("/", 1)
 work = Path(tempfile.mkdtemp())
