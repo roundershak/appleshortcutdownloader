@@ -42,7 +42,7 @@ jobs:
       - name: Kes ve arsivle
         if: steps.s.outputs.files != ''
         env:
-          GH_TOKEN: ${{ secrets.GH_PAT || github.token }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           git config --global user.name klip-bot; git config --global user.email klip-bot@users.noreply.github.com
           for f in ${{ steps.s.outputs.files }}; do python tools/manual_clip.py "$f"; done
