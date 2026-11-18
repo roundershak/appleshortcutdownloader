@@ -1,0 +1,91 @@
+{
+ "id": "20261118-155500",
+ "score": 1.937,
+ "peak": 0.5277777777777778,
+ "base": 0.2595238095238095,
+ "hype": 0.0625,
+ "rage": 0.013888888888888888,
+ "chat": [
+  "İRAN PRENSESİ GİBİ AMK",
+  "NEY",
+  "NEY",
+  "ney",
+  "kavga çıkacak mekanda",
+  "IFAULHWUFGHAWIGULAJHWGUAW",
+  "nası",
+  "NEY",
+  "ney",
+  "YOK",
+  "IFAULHWUFGHAWIGULAJHWGUAW",
+  "nası",
+  "NEY",
+  "ney",
+  "YOK"
+ ],
+ "speech": [
+  [
+   0.0,
+   "Tamam."
+  ],
+  [
+   1.1,
+   "Oh Jason, lütfen, benim için en iyi bir şey yapma."
+  ],
+  [
+   3.6,
+   "Sen de ya."
+  ],
+  [
+   5.1,
+   "Tamam, tabii ki."
+  ],
+  [
+   6.2,
+   "Tamam."
+  ],
+  [
+   6.7,
+   "Tamam."
+  ],
+  [
+   7.2,
+   "Tamam."
+  ],
+  [
+   7.7,
+   "Ben de kabul etmiyorum."
+  ],
+  [
+   10.2,
+   "Sen de, bu yerin içindeki yerin en iyi bir şey yapmalı."
+  ],
+  [
+   13.2,
+   "Burada böyle bir şey var."
+  ],
+  [
+   14.3,
+   "Buraya gidelim, bir gerçek bir tanesi yapalım."
+  ],
+  [
+   17.3,
+   "Evet, bir dakika."
+  ],
+  [
+   19.3,
+   "Sessiz, nerede?"
+  ],
+  [
+   23.0,
+   "Jason, sen de bir yer görmedin mi?"
+  ],
+  [
+   26.0,
+   "Ya bu ne ya?"
+  ]
+ ],
+ "layout": "full",
+ "cam": null,
+ "fallback_title": "eray gta 6'da: \"jason, sen de bir yer görmedin mi?\" AKSJDHAKSJD",
+ "dur": 40.0
+}
