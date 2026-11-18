@@ -1,0 +1,38 @@
+name: YouTube durum
+
+on:
+  workflow_dispatch:
+    inputs:
+      ids: {description: "virgulle video id'leri", required: true}
+
+jobs:
+  durum:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - run: pip install -q google-api-python-client google-auth
+      - env:
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+          IDS: ${{ github.event.inputs.ids }}
+        run: |
+          python - <<'PY'
+          import os, json
+          from google.oauth2.credentials import Credentials
+          from googleapiclient.discovery import build
+          c = Credentials(None, refresh_token=os.environ["YT_REFRESH_TOKEN"], token_uri="https://oauth2.googleapis.com/token",
+                          client_id=os.environ["YT_CLIENT_ID"], client_secret=os.environ["YT_CLIENT_SECRET"])
+          yt = build("youtube", "v3", credentials=c, cache_discovery=False)
+          r = yt.videos().list(part="status,statistics,snippet,contentDetails", id=os.environ["IDS"]).execute()
+          for v in r.get("items", []):
+              print(json.dumps({"id": v["id"], "baslik": v["snippet"]["title"], "kanal": v["snippet"]["channelTitle"],
+                                "status": v["status"], "istatistik": v.get("statistics"),
+                                "sure": v["contentDetails"].get("duration"),
+                                "bolge": v["contentDetails"].get("regionRestriction"),
+                                "telif": v["contentDetails"].get("licensedContent")}, ensure_ascii=False, indent=1))
+          ch = yt.channels().list(part="snippet,statistics,status", mine=True).execute()
+          for x in ch.get("items", []):
+              print("KANAL:", json.dumps({"ad": x["snippet"]["title"], "ist": x["statistics"], "durum": x.get("status")}, ensure_ascii=False))
+          PY
