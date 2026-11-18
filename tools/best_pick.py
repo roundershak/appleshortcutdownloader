@@ -12,7 +12,9 @@ from clipbot.kick import ClipInfo  # noqa: E402
 
 ap = argparse.ArgumentParser()
 ap.add_argument("logdir", type=Path)
-ap.add_argument("--hours", type=float, default=36)
+ap.add_argument("--hours", type=float, default=24)
+ap.add_argument("--efsane-hours", type=float, default=72)
+ap.add_argument("--efsane-skor", type=float, default=4.5)
 ap.add_argument("--irl-per-day", type=int, default=2)
 a = ap.parse_args()
 d = a.logdir / "canli"
@@ -39,7 +41,10 @@ for j in d.glob("2*.json"):
     cid = j.stem
     t = datetime.strptime(cid, "%Y%m%d-%H%M%S").replace(tzinfo=timezone.utc).timestamp()
     if now - t > a.hours * 3600:
-        continue
+        # eski klip: sadece 5/5 seviyesi (Claude 'efsane' isaretlediyse ya da skor cok yuksekse)
+        sk = json.loads(f.read_text()).get("score", 0) if f.exists() else 0
+        if not (now - t <= a.efsane_hours * 3600 and ((d / f"{cid}.efsane").exists() or sk >= a.efsane_skor)):
+            continue
     meta = json.loads(j.read_text())
     son = json.loads((d / f"{cid}.sonuc").read_text()) if (d / f"{cid}.sonuc").exists() else {}
     title_f = d / f"{cid}.title"

@@ -521,9 +521,9 @@ def slot_tick():
     """Yukleme saatlerinde (UTC 11,13,15,17,19,21 :07) en iyi klip secimini tetikle; yayin kapaliyken de."""
     g = time.gmtime()
     slot = time.strftime("%Y%m%d%H", g)
-    if g.tm_hour in (11, 13, 15, 17, 19, 21) and g.tm_min >= 7 and slot != _last_slot["v"]:
+    if g.tm_hour in (11, 13, 15, 17, 19) and g.tm_min >= 7 and slot != _last_slot["v"]:
         _last_slot["v"] = slot
-        r = subprocess.run(["gh", "workflow", "run", "best.yml", "-f", "hours=36"], capture_output=True, text=True, cwd=ROOT)
+        r = subprocess.run(["gh", "workflow", "run", "best.yml", "-f", "hours=24"], capture_output=True, text=True, cwd=ROOT)
         log("en iyi klip secimi tetiklendi", r.returncode, r.stderr[:100])
 
 
@@ -617,6 +617,9 @@ def main():
                 if time.time() - offline_since > args.offline_stop_min * 60:
                     # Durma: yayin ara verdi; isleri bitir, zincir yeni calismada tekrar acilmasini bekler
                     log("yayin kapali (ara?), bekleme moduna geciliyor")
+                    # gunun son klibi: yayin bitince yuklenir
+                    r = subprocess.run(["gh", "workflow", "run", "best.yml", "-f", "hours=24"], capture_output=True, text=True, cwd=ROOT)
+                    log("yayin bitti -> son klip secimi tetiklendi", r.returncode)
                     jobs.put(None); th.join(timeout=900); return 2
         slot_tick()
         if time.time() - last_state > 600:
