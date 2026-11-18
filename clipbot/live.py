@@ -351,8 +351,13 @@ class Publisher:
     def grab(self, ev, rec: Recorder):
         """Olay biter bitmez ham kesiti kayittan al (hizli, -c copy)."""
         cid = datetime.fromtimestamp(ev["t0"], timezone.utc).strftime("%Y%m%d-%H%M%S")
-        a = ev["t0"] - 30
-        b = min(max(ev["t0"] + 8, ev["t1"] - 12), a + 42)
+        if ev.get("t1", ev["t0"]) - ev["t0"] > 30 and ev.get("peak_t"):
+            # uzun olay: chat'in en cok guldugu ani ortala (tepki olaydan ~10 sn sonra gelir)
+            a = ev["peak_t"] - 32
+            b = ev["peak_t"] + 8
+        else:
+            a = ev["t0"] - 30
+            b = min(max(ev["t0"] + 8, ev["t1"] - 12), a + 42)
         if b - a < 30:
             b = a + 32
         for _ in range(30):
@@ -560,6 +565,7 @@ def main():
     offline_since = None
     last_state = 0
     last_loud, loud_hist, shout_hits = 0, deque(maxlen=225), 0
+    last_slot = time.strftime("%Y%m%d%H", time.gmtime()) if time.gmtime().tm_min >= 7 else ""
     while time.time() < deadline:
         chat.poll()
         if chat.win:
@@ -598,6 +604,11 @@ def main():
                     # Durma: yayin ara verdi; isleri bitir, zincir yeni calismada tekrar acilmasini bekler
                     log("yayin kapali (ara?), bekleme moduna geciliyor")
                     jobs.put(None); th.join(timeout=900); return 2
+        slot = time.strftime("%Y%m%d%H", time.gmtime())
+        if time.gmtime().tm_hour in (11, 13, 15, 17, 19, 21) and time.gmtime().tm_min >= 7 and slot != last_slot:
+            last_slot = slot
+            r = subprocess.run(["gh", "workflow", "run", "best.yml", "-f", "hours=24"], capture_output=True, text=True, cwd=ROOT)
+            log("en iyi klip secimi tetiklendi", r.returncode, r.stderr[:100])
         if time.time() - last_state > 600:
             last_state = time.time()
             lr = det.rates(chat.win)[0] if chat.win else 0

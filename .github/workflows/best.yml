@@ -3,7 +3,7 @@ name: En iyi klip yukle
 # Gunde 6 kez: son 24 saatin henuz yayinlanmamis en iyi klibi (en az 4 oyun, en fazla 2 IRL) -> YouTube + TikTok taslak
 on:
   schedule:
-    - cron: "7 11,13,15,17,19,21 * * *"   # TR 14:07, 16:07, 18:07, 20:07, 22:07, 00:07
+    - cron: "37 11,13,15,17,19,21 * * *"   # yedek: canli takip de :07de tetikler   # TR 14:07, 16:07, 18:07, 20:07, 22:07, 00:07
   workflow_dispatch:
     inputs:
       hours: {description: "Kac saatlik pencere", default: "24"}
