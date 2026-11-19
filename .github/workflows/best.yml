@@ -1,12 +1,13 @@
 name: En iyi klip yukle
 
-# Gunde 6 kez: son 24 saatin henuz yayinlanmamis en iyi klibi (en az 4 oyun, en fazla 2 IRL) -> YouTube + TikTok taslak
+# Gun icinde 5 kez: en iyi onayli klip -> TikTok taslak. Yayin sonunda (mode=youtube): gunun en iyi 3 klibi -> YouTube
 on:
   schedule:
     - cron: "37 11,13,15,17,19 * * *"   # yedek: canli takip de :07de tetikler   # TR 14:07, 16:07, 18:07, 20:07, 22:07, 00:07
   workflow_dispatch:
     inputs:
       hours: {description: "Kac saatlik pencere", default: "24"}
+      mode: {description: "tiktok (gun ici taslak) | youtube (yayin sonu en iyiler)", default: "tiktok"}
 
 concurrency:
   group: best-pick
@@ -18,7 +19,7 @@ permissions:
 jobs:
   pick:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -40,7 +41,7 @@ jobs:
           TIKTOK_REFRESH_TOKEN: ${{ secrets.TIKTOK_REFRESH_TOKEN }}
           GH_PAT: ${{ secrets.GH_PAT }}
           GH_TOKEN: ${{ github.token }}
-        run: python tools/best_pick.py .canli --hours "${{ github.event.inputs.hours || '24' }}"
+        run: python tools/best_pick.py .canli --hours "${{ github.event.inputs.hours || '24' }}" --mode "${{ github.event.inputs.mode || 'tiktok' }}"
       - name: Kaydet
         if: always()
         run: |
