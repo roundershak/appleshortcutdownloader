@@ -1,7 +1,11 @@
 """Basligi olmayan yeni canli klipleri bildirir. python tools/title_watch.py <min_id> <min_skor>"""
 import json, subprocess, sys, time
 from pathlib import Path
-D = Path(__file__).resolve().parent.parent / ".canli"
+R = Path(__file__).resolve().parent.parent
+D = R / ".canli-izle"  # set_title.sh ile ayni klasoru kullanmasin (reset --hard yaris kosulu basliklari siliyordu)
+if not D.exists():
+    subprocess.run(["git", "-C", str(R), "fetch", "-q", "origin", "canli-log"], capture_output=True)
+    subprocess.run(["git", "-C", str(R), "worktree", "add", "-q", "--detach", str(D), "origin/canli-log"], capture_output=True)
 min_id, min_s = sys.argv[1], float(sys.argv[2])
 seen = set()
 while True:

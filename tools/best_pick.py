@@ -43,7 +43,7 @@ def render(cid, title, asset, big):
         return out
 
 
-def meta(title):
+def make_meta(title):
     return build_meta({"title": title, "hashtags": ["gta6", "gtavi"], "tags": ["gta 6", "gta vi", "eray gta 6"]},
                       ClipInfo(url="", channel="eray"), cfg)
 
@@ -83,7 +83,7 @@ if a.mode == "youtube":
     for i, (score, cid, title, asset, kind, _) in enumerate(pick):
         if i:
             time.sleep(a.yt_gap * 60)
-        m = meta(title)
+        m = make_meta(title)
         try:
             r = youtube.upload(render(cid, title, asset, True), m["yt_title"], m["description"], m["tags"])
         except Exception as e:  # noqa: BLE001
@@ -151,7 +151,7 @@ cands.sort(key=lambda c: (c[0], c[1]), reverse=True)
 ok_, score, cid, title, asset = cands[0]
 print(f"son 24 saatte yayinlanan IRL: {irl_done}")
 print(f"SECILEN: {cid} skor={score} onayli={bool(ok_)} baslik={title}  (aday sayisi {len(cands)})")
-m = meta(title)
+m = make_meta(title)
 res = {}
 if os.environ.get("TIKTOK_CLIENT_KEY"):
     try:
