@@ -1,0 +1,47 @@
+{
+ "id": "20261119-140020",
+ "score": 3.638,
+ "peak": 0.40816326530612246,
+ "base": 0.31,
+ "hype": 0.15306122448979592,
+ "rage": 0.0,
+ "chat": [],
+ "speech": [
+  [
+   0.0,
+   "Bir daha var."
+  ],
+  [
+   3.2,
+   "Ben gibi okuyorum."
+  ],
+  [
+   5.2,
+   "Ben de gibi okuyorum."
+  ],
+  [
+   9.7,
+   "Gelinmeyene sakin."
+  ],
+  [
+   14.4,
+   "Tamam, bu sanatı geçiyor mu?"
+  ],
+  [
+   20.6,
+   "Alkol'den ayılıyoruz."
+  ],
+  [
+   32.5,
+   "Lan götürüyor!"
+  ],
+  [
+   34.0,
+   "Manik var ya, gelin alın!"
+  ]
+ ],
+ "layout": "full",
+ "cam": null,
+ "fallback_title": "eray gta 6'da böyle bir şey görmedi!!",
+ "dur": 38.0
+}
