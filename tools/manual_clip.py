@@ -34,6 +34,19 @@ if s.get("efsane"):
     (c / f"{cid}.efsane").write_text("1")
 (c / f"{cid}.sonuc").write_text(json.dumps({"title": s["title"], "arsiv": f"{tag}/{cid}.mp4", "score": s.get("score", 4.8),
                                             "yayin": "bekliyor"}, ensure_ascii=False))
+if s.get("tiktok_now"):  # hemen TikTok taslagina da gonder
+    import time
+    from clipbot import tiktok
+    from clipbot.__main__ import build_meta, load_streamers
+    from clipbot.kick import ClipInfo
+    sc = load_streamers(); cfg = {**sc["_default"], **sc["eray"]}
+    m = build_meta({"title": s["title"], "hashtags": ["gta6", "gtavi"]}, ClipInfo(url="", channel="eray"), cfg)
+    try:
+        r = tiktok.upload(out, m["caption"], mode="draft")
+    except Exception as e:  # noqa: BLE001
+        r = f"HATA {e}"
+    print("[sonuc] tiktok:", r)
+    (c / f"{cid}.yayin").write_text(json.dumps({"title": s["title"], "zaman": time.time(), "tiktok": r}, ensure_ascii=False))
 for cmd in (["add", "-A"], ["-c", "user.name=klip-bot", "-c", "user.email=klip-bot@users.noreply.github.com", "commit", "-qm", f"elle klip {cid}"]):
     subprocess.run(["git", *cmd], cwd=d, check=True)
 for _ in range(4):

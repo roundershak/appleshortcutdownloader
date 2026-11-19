@@ -43,6 +43,11 @@ jobs:
         if: steps.s.outputs.files != ''
         env:
           GH_TOKEN: ${{ github.token }}
+          TIKTOK_CLIENT_KEY: ${{ secrets.TIKTOK_CLIENT_KEY }}
+          TIKTOK_CLIENT_SECRET: ${{ secrets.TIKTOK_CLIENT_SECRET }}
+          TIKTOK_REFRESH_TOKEN: ${{ secrets.TIKTOK_REFRESH_TOKEN }}
+          TIKTOK_REDIRECT_URI: ${{ secrets.TIKTOK_REDIRECT_URI }}
+          GH_PAT: ${{ secrets.GH_PAT }}
         run: |
           git config --global user.name klip-bot; git config --global user.email klip-bot@users.noreply.github.com
           for f in ${{ steps.s.outputs.files }}; do python tools/manual_clip.py "$f"; done
