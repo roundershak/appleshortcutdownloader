@@ -519,7 +519,7 @@ class Publisher:
 
 
 # ---------------------------------------------------------------- ana dongu
-_last_slot = {"v": time.strftime("%Y%m%d%H", time.gmtime()) if time.gmtime().tm_min >= 7 else ""}
+_last_slot = {"v": ""}  # zincir yenilenince o saatin slotu kacmasin; cift yuklemeyi best_pick 80 dk kurali engeller
 
 
 def slot_tick():
