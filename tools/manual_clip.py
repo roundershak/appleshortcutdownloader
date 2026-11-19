@@ -11,7 +11,8 @@ s = json.load(open(sys.argv[1]))
 cid, tur = s["id"], s.get("tur", "irl")
 work = Path(tempfile.mkdtemp())
 src = kick.cut_vod(s["vod"], s["start"] - 2, s["end"] + 1, work / "src.mp4")
-plan = edit.plan_layout(src, layout="full")
+plan = edit.plan_layout(src, cam=s.get("cam"), layout="auto" if s.get("cam") else "full")  # cam: ustte kamera, altta oyun
+print("duzen:", plan["layout"], plan["cam"], plan["game"])
 out = edit.render(src, work / f"{cid}.mp4", plan, start=2, end=2 + s["end"] - s["start"])
 tag = f"{tur}-{cid[:8]}"
 if subprocess.run(["gh", "release", "view", tag], capture_output=True).returncode != 0:
