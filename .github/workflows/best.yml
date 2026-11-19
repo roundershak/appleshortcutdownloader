@@ -47,5 +47,5 @@ jobs:
         run: |
           cd .canli
           git config user.name klip-bot; git config user.email klip-bot@users.noreply.github.com
-          git add -A && git commit -qm "en iyi klip yayini" || exit 0
+          git add -A; git commit -qm "en iyi klip yayini" || true
           for i in 1 2 3; do git pull -q --rebase origin canli-log && git push -q origin HEAD:canli-log && break; done
