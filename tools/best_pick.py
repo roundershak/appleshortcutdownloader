@@ -89,6 +89,10 @@ if a.mode == "youtube":
         except Exception as e:  # noqa: BLE001
             r, fail = f"HATA {e}", True
         print("SONUC", cid, r)
+        if str(r).startswith("HATA"):
+            if "quota" in str(r).lower():
+                print("YouTube kotasi doldu, kalanlar yarin"); break
+            continue
         (d / f"{cid}.yt").write_text(json.dumps({"title": m["yt_title"], "zaman": time.time(), "youtube": r}, ensure_ascii=False))
         subprocess.run(["git", "-C", str(a.logdir), "add", "-A"]); subprocess.run(["git", "-C", str(a.logdir), "-c", "user.name=klip-bot",
                        "-c", "user.email=klip-bot@users.noreply.github.com", "commit", "-qm", f"youtube {cid}"])
