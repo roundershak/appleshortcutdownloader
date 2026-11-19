@@ -1,0 +1,115 @@
+{
+ "id": "20261119-205410",
+ "score": 2.125,
+ "peak": 0.6857142857142857,
+ "base": 0.4346153846153846,
+ "hype": 0.0,
+ "rage": 0.0,
+ "chat": [
+  "ADAM",
+  "adam",
+  "adam",
+  "Eroyada sırnaşıyo işte",
+  "ADAM MI",
+  "ADAM",
+  "Biz sana hamburger verdik",
+  "adam",
+  "Eroyada sırnaşıyo işte",
+  "ADAM MI",
+  "ADAM",
+  "Biz sana hamburger verdik",
+  "CEVAP MI VERCEK DİCEM DE HEMCİNSİYLE KONUŞUYO",
+  "XD XD",
+  "adam"
+ ],
+ "speech": [
+  [
+   0.0,
+   "Bu kesinlikle yalan aldı."
+  ],
+  [
+   2.0,
+   "Yalan mı?"
+  ],
+  [
+   4.0,
+   "Ne seviyemiydi?"
+  ],
+  [
+   6.0,
+   "Abi çok güzelmiş."
+  ],
+  [
+   8.0,
+   "Bal mı adı?"
+  ],
+  [
+   10.0,
+   "Yerik, erik."
+  ],
+  [
+   12.0,
+   "Yerik mi sen?"
+  ],
+  [
+   14.0,
+   "Balı mı bu?"
+  ],
+  [
+   16.0,
+   "Sen mi yiyorsun?"
+  ],
+  [
+   18.0,
+   "Senin yanını mı gökü?"
+  ],
+  [
+   20.0,
+   "Hiç sevmiyorum."
+  ],
+  [
+   22.0,
+   "Hiç sevmiyorum."
+  ],
+  [
+   24.0,
+   "Ağlıyor köpek."
+  ],
+  [
+   26.0,
+   "Seviyoruz."
+  ],
+  [
+   28.0,
+   "Sevmiyor muyuz?"
+  ],
+  [
+   30.0,
+   "Ben niye o açtığına yiyor?"
+  ],
+  [
+   32.0,
+   "Sevgi var mı?"
+  ],
+  [
+   34.0,
+   "Yemek vardı sevgi yok gibi."
+  ],
+  [
+   36.0,
+   "Yerik sen mi?"
+  ],
+  [
+   38.0,
+   "Yerik ben sana bir şey söyleyeyim mi?"
+  ],
+  [
+   40.0,
+   "Sevmiyor muyuz kızım?"
+  ]
+ ],
+ "layout": "full",
+ "cam": null,
+ "fallback_title": "eray gta 6'da yine olay çıkardı SDFJKLSDFJKL",
+ "dur": 42.0
+}
