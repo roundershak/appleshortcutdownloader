@@ -34,7 +34,11 @@ for y in d.glob("2*.yayin"):
     j0 = d / f"{cid0}.json"
     tur0 = d / f"{cid0}.tur"
     k0 = tur0.read_text().strip() if tur0.exists() else (json.loads(j0.read_text()).get("layout") == "split" and "oyun" or "irl") if j0.exists() else "oyun"
-    if now - t0 < 24 * 3600 and k0 == "irl":
+    try:  # yukleme zamanina gore say (klibin kesildigi zamana gore degil)
+        t0 = json.loads(y.read_text()).get("zaman", t0)
+    except Exception:
+        pass
+    if now - t0 < 20 * 3600 and k0 == "irl":
         irl_done += 1
 cands = []
 for j in d.glob("2*.json"):
