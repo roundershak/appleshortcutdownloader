@@ -21,7 +21,7 @@ def _client():
 
 
 def upload(path: Path, title: str, description: str, tags: list[str],
-           privacy: str = "public", category: str = "24") -> str:
+           privacy: str = "public", category: str = "20") -> str:
     from googleapiclient.errors import HttpError
     from googleapiclient.http import MediaFileUpload
 
