@@ -57,7 +57,8 @@ for j in d.glob("2*.json"):
     kind = tur_f.read_text().strip() if tur_f.exists() else ("oyun" if meta.get("layout") == "split" else "irl")
     if kind == "irl" and irl_done >= a.irl_per_day:
         continue  # gunde en fazla 2 IRL, en az 4 oyun
-    # Claude'un onayladigi (baslik yazdigi) klipler once, sonra skor
+    if not title:
+        continue  # sadece Claude'un onayladigi (baslik yazdigi) klipler yuklenir; onaysiz klip asla
     cands.append((1 if title else 0, meta.get("score", 0), cid, title or meta.get("fallback_title"), son["arsiv"]))
 if not cands:
     print("Bu pencerede yayinlanacak klip yok"); sys.exit(0)
