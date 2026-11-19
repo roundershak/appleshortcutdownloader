@@ -1,0 +1,79 @@
+{
+ "id": "20261119-130605",
+ "score": 1.98,
+ "peak": 0.5257731958762887,
+ "base": 0.2264957264957265,
+ "hype": 0.030927835051546393,
+ "rage": 0.0,
+ "chat": [
+  "ayarlardan patlamayı açtı mı",
+  "patlama ayarını açın",
+  "ooyyyyy",
+  "BİZEDE EL ATSANA",
+  "kule yok mu etrafta",
+  "ayarlardan patlamayı açtı mı",
+  "patlama ayarını açın",
+  "ooyyyyy",
+  "BİZEDE EL ATSANA",
+  "kule yok mu etrafta",
+  "YOK",
+  "tamam",
+  "seco sen ne olsun ıstıyon",
+  "UÇAK ÇARPMA AYARINI ACSANIZA",
+  "patlama ayarını aç"
+ ],
+ "speech": [
+  [
+   0.0,
+   "Uçak kullanamıyoruz uçak kullanabiliyoruz ama"
+  ],
+  [
+   2.0,
+   "Sen sürme biliyor musun ilk defa mı sürüyorsun?"
+  ],
+  [
+   10.9,
+   "Sen sürüyordun lan ben"
+  ],
+  [
+   12.9,
+   "Sürüyün mü dersin?"
+  ],
+  [
+   14.9,
+   "Bunu çarpsana"
+  ],
+  [
+   18.9,
+   "Bunları çarpsana"
+  ],
+  [
+   22.2,
+   "Sen uçakla yaramayacaksın"
+  ],
+  [
+   26.8,
+   "Uçakla uçağa çarp daha ilk yapan yoktur"
+  ],
+  [
+   28.8,
+   "Uçakla uçağa mı çarpayım?"
+  ],
+  [
+   30.8,
+   "Uçakla uçağa çarpalım"
+  ],
+  [
+   32.8,
+   "Lan tepede iki tane uçuyor ya"
+  ],
+  [
+   34.8,
+   "Uçakla gemiye çarp"
+  ]
+ ],
+ "layout": "full",
+ "cam": null,
+ "fallback_title": "eray gta 6'da: \"uçakla uçağa mı çarpayım?\" ĞPAŞSLDKAŞS",
+ "dur": 40.0
+}
