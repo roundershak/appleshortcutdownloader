@@ -1,0 +1,71 @@
+{
+ "id": "20261120-144225",
+ "score": 1.92,
+ "peak": 0.4696969696969697,
+ "base": 0.15300120048019208,
+ "hype": 0.015151515151515152,
+ "rage": 0.015151515151515152,
+ "chat": [
+  "EVET",
+  "bıraktın karıyı",
+  "orderi öp",
+  "@cagrriii",
+  "he ya 󠀡",
+  "bu yayında da belli bi süre verilmedi",
+  ":collectiblesNumberPlate:VICE",
+  "ALTYAZILARADA GECİKME VAR",
+  "e kızı bıraktın gittin",
+  "harbi niye kızla yapmadık almadın diye mi",
+  "bu yayında da belli bi süre verilmedi",
+  ":collectiblesNumberPlate:VICE",
+  "ALTYAZILARADA GECİKME VAR",
+  "e kızı bıraktın gittin",
+  "harbi niye kızla yapmadık almadın diye mi"
+ ],
+ "speech": [
+  [
+   0.0,
+   "Tamam, kaçtık bizden kaçtık."
+  ],
+  [
+   8.3,
+   "Buradan gidelim."
+  ],
+  [
+   10.3,
+   "Buradan gidelim."
+  ],
+  [
+   15.3,
+   "Görün mü abinin hareketleri?"
+  ],
+  [
+   19.5,
+   "Bu biraz esnizli kalsını yapıyorum bu hareketleri."
+  ],
+  [
+   21.5,
+   "Tamam, bu hareketleri."
+  ],
+  [
+   23.5,
+   "Tamam, tamam."
+  ],
+  [
+   27.5,
+   "Sadece bir yemeğe ihtiyacın var."
+  ],
+  [
+   29.5,
+   "Hiç bir yemeğe ihtiyacım yok."
+  ],
+  [
+   31.5,
+   "Tamam, iyi."
+  ]
+ ],
+ "layout": "full",
+ "cam": null,
+ "fallback_title": "eray gta 6'da: \"görün mü abinin hareketleri?\" AKSJDHAKSJD",
+ "dur": 40.0
+}
