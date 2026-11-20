@@ -1,0 +1,63 @@
+{
+ "id": "20261120-180615",
+ "score": 0.653,
+ "peak": 0.06382978723404255,
+ "base": 0.1602469135802469,
+ "hype": 0.525,
+ "rage": 0.0,
+ "chat": [
+  "SUÇLU BU ALDATAK BUNU",
+  "aha",
+  "NOLUYO LAN",
+  "BUNLAR KİM LA",
+  "LAN",
+  "OOOOWWW",
+  "noluyoo",
+  "LAN",
+  "aha",
+  "NOLDU",
+  "OOOOWWW",
+  "noluyoo",
+  "LAN",
+  "aha",
+  "NOLDU"
+ ],
+ "speech": [
+  [
+   0.0,
+   "Anne çok berbat haldesin ya gözünü seveyim."
+  ],
+  [
+   4.0,
+   "Hayır biz yapmayalım."
+  ],
+  [
+   8.0,
+   "Hemen de risik edeceğiz."
+  ],
+  [
+   26.0,
+   "Ağzı mı yapıyorsun?"
+  ],
+  [
+   30.0,
+   "Gerçekten mi?"
+  ],
+  [
+   35.0,
+   "Güzel."
+  ],
+  [
+   36.0,
+   "Çok güzel."
+  ],
+  [
+   38.0,
+   "Ama bir şarkıcı bir şarkıcı."
+  ]
+ ],
+ "layout": "full",
+ "cam": null,
+ "fallback_title": "eray gta 6'da: \"ağzı mı yapıyorsun?\" AKSJDHAKSJD",
+ "dur": 40.0
+}
