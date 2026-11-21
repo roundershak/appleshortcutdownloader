@@ -1,0 +1,63 @@
+{
+ "id": "20261121-155645",
+ "score": 2.266,
+ "peak": 0.5416666666666666,
+ "base": 0.1705263157894737,
+ "hype": 0.034482758620689655,
+ "rage": 0.034482758620689655,
+ "chat": [
+  "ağızını",
+  "SIKSAYDIN PATLARDI",
+  "şom ağızlı tam",
+  "ağızını",
+  "SIKSAYDIN PATLARDI",
+  "şom ağızlı tam",
+  "polis gelene kadar kacmış oluruz",
+  "Hey dostum, acıktın mı? McDonald's Gamer Menü'de sana özel indirim seni bekliyor",
+  "polisin bile giremedigi korkunc mahalle",
+  "aranırken lucia geçemiyozmu",
+  "polis gelene kadar kacmış oluruz",
+  "Hey dostum, acıktın mı? McDonald's Gamer Menü'de sana özel indirim seni bekliyor",
+  "polisin bile giremedigi korkunc mahalle",
+  "aranırken lucia geçemiyozmu",
+  "lucia jasonu aldatıyo mu"
+ ],
+ "speech": [
+  [
+   0.3,
+   "Şu arabaya alayım gideyim mi? Neyse şey yapalım."
+  ],
+  [
+   3.5,
+   "Yolculuk yapalım hadi."
+  ],
+  [
+   7.1,
+   "Yolculuk yapalım hadi."
+  ],
+  [
+   10.4,
+   "Polis de gelmiyor buraya."
+  ],
+  [
+   15.0,
+   "Polisi mi arıyor?"
+  ],
+  [
+   17.0,
+   "İyi ki gelmiyor dedik polisi."
+  ],
+  [
+   19.0,
+   "Hadi karşımda."
+  ],
+  [
+   28.1,
+   "Mehmet."
+  ]
+ ],
+ "layout": "full",
+ "cam": null,
+ "fallback_title": "eray gta 6'da: \"polisi mi arıyor?\" AKSJDHAKSJD",
+ "dur": 40.0
+}
