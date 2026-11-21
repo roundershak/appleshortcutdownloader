@@ -1,0 +1,95 @@
+{
+ "id": "20261121-203230",
+ "score": 0.9,
+ "peak": 0.14814814814814814,
+ "base": 0.5149286987522281,
+ "hype": 0.5662650602409639,
+ "rage": 0.037037037037037035,
+ "chat": [
+  "DELİ Mİ OLUYOM BEN",
+  "noldu aq",
+  "KKABUS",
+  "BARAN SÜRTÜNME",
+  "baran mikrofonu ısırıyor arada galiba",
+  "BAĞIMLIMI BU",
+  "rüya mı",
+  "UZAYLIMIM",
+  "rüya rüya",
+  "DELİ Mİ OLUYO",
+  "BAĞIMLIMI BU",
+  "rüya mı",
+  "UZAYLIMIM",
+  "rüya rüya",
+  "DELİ Mİ OLUYO"
+ ],
+ "speech": [
+  [
+   2.5,
+   "Teşekkürler."
+  ],
+  [
+   3.5,
+   "Gördün mü?"
+  ],
+  [
+   9.0,
+   "Oluyo bak."
+  ],
+  [
+   10.0,
+   "Açma kapıyı."
+  ],
+  [
+   11.0,
+   "Açmayalım ya."
+  ],
+  [
+   12.0,
+   "Görüyor musun?"
+  ],
+  [
+   13.0,
+   "Rüyadayız ya."
+  ],
+  [
+   15.0,
+   "Ooo."
+  ],
+  [
+   17.0,
+   "En ölü hayat."
+  ],
+  [
+   19.6,
+   "Ne?"
+  ],
+  [
+   22.6,
+   "Biliyor musun şarkı?"
+  ],
+  [
+   27.6,
+   "Ne oldu?"
+  ],
+  [
+   28.6,
+   "Biliyor musun?"
+  ],
+  [
+   32.3,
+   "Sime bak lan."
+  ],
+  [
+   36.3,
+   "Bu bizim fukara dönemler mi?"
+  ],
+  [
+   37.3,
+   "Evet."
+  ]
+ ],
+ "layout": "full",
+ "cam": null,
+ "fallback_title": "eray gta 6'da böyle bir şey görmedi!!",
+ "dur": 40.0
+}
