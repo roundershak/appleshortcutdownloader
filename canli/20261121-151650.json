@@ -1,0 +1,107 @@
+{
+ "id": "20261121-151650",
+ "score": 1.549,
+ "peak": 0.2891566265060241,
+ "base": 0.09838709677419355,
+ "hype": 0.3855421686746988,
+ "rage": 0.0125,
+ "chat": [
+  "kupon çalışmıyor",
+  "NOLUO",
+  "beyler noluyor ne kaçırdım",
+  "rraenee yok sen varsın reis",
+  "güven verdi eleman",
+  ":collectiblesMONKE::collectiblesMONKE::collectiblesMONKE::collectiblesMONKE::col",
+  "s2kecekler",
+  "ooooo fantazi",
+  "kelebek",
+  "sikcek galiba",
+  ":collectiblesMONKE::collectiblesMONKE::collectiblesMONKE::collectiblesMONKE::col",
+  "s2kecekler",
+  "ooooo fantazi",
+  "kelebek",
+  "sikcek galiba"
+ ],
+ "speech": [
+  [
+   0.0,
+   "İki şey falan bulundu."
+  ],
+  [
+   1.8,
+   "Tamam."
+  ],
+  [
+   3.1,
+   "İki şey."
+  ],
+  [
+   4.5,
+   "Oğlum ne oluyor?"
+  ],
+  [
+   5.5,
+   "Bebeğim."
+  ],
+  [
+   6.5,
+   "Adam bir yukarı yıktı."
+  ],
+  [
+   7.3,
+   "Ne oluyor?"
+  ],
+  [
+   9.1,
+   "Bu tür bir sorunlarım var."
+  ],
+  [
+   16.5,
+   "Sıcak, sakin ol."
+  ],
+  [
+   18.4,
+   "Sakin ol."
+  ],
+  [
+   19.8,
+   "Bu da verin."
+  ],
+  [
+   25.5,
+   "Bunu al."
+  ],
+  [
+   27.4,
+   "Ben de bu fotoğrafı 100 tane alayım."
+  ],
+  [
+   30.4,
+   "Aaaa!"
+  ],
+  [
+   34.4,
+   "Bir çay mı var?"
+  ],
+  [
+   35.9,
+   "Ne bileyim?"
+  ],
+  [
+   36.6,
+   "Evet."
+  ],
+  [
+   36.8,
+   "Bak, şeyi dönmesinler."
+  ],
+  [
+   39.4,
+   "Bak."
+  ]
+ ],
+ "layout": "full",
+ "cam": null,
+ "fallback_title": "eray gta 6'da chat'i kopardı!!",
+ "dur": 40.0
+}
