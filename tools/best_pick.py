@@ -103,8 +103,8 @@ for y in d.glob("2*.yayin"):
         ts = json.loads(y.read_text()).get("zaman", 0)
     except Exception:
         ts = 0
-    if now - ts < 25 * 60:
-        print("Son 25 dk icinde zaten yukleme yapildi, atlaniyor"); sys.exit(0)
+    if now - ts < 35 * 60:
+        print("Son 35 dk icinde zaten yukleme yapildi, atlaniyor"); sys.exit(0)
 irl_done = 0
 for y in d.glob("2*.yayin"):
     cid0 = y.stem
