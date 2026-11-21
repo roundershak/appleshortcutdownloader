@@ -18,7 +18,7 @@ ap.add_argument("--efsane-skor", type=float, default=4.5)
 ap.add_argument("--irl-per-day", type=int, default=2)
 ap.add_argument("--mode", default="tiktok", choices=["tiktok", "youtube"],
                 help="tiktok: gun icinde saat basi 1 klip taslak; youtube: yayin sonunda gunun en iyileri")
-ap.add_argument("--yt-count", type=int, default=3)
+ap.add_argument("--yt-count", type=int, default=2)
 ap.add_argument("--yt-gap", type=float, default=25, help="YouTube yuklemeleri arasi dk")
 ap.add_argument("--yt-hours", type=float, default=18)
 a = ap.parse_args()
