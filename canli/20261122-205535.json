@@ -1,0 +1,111 @@
+{
+ "id": "20261122-205535",
+ "score": 1.09,
+ "peak": 0.17142857142857143,
+ "base": 0.23623188405797102,
+ "hype": 0.7333333333333333,
+ "rage": 0.0136986301369863,
+ "chat": [
+  "HOBBİT MANDYE GİDEK",
+  "BENCE BÖYTLE KONUŞMA BARAN",
+  "AHA",
+  "aktivite yapmıyorsun beraber",
+  "HOBBİT MANDYE GİDEK",
+  "BENCE BÖYTLE KONUŞMA BARAN",
+  "AHA",
+  "aktivite yapmıyorsun beraber",
+  "AĞZIMIZA SOK ERAY",
+  "olayabak",
+  "ÇOK MU KOMİK",
+  "UZAĞA OTURDU GENE",
+  "konsol oynasana",
+  "AĞZIMIZA SOK ERAY",
+  "olayabak"
+ ],
+ "speech": [
+  [
+   0.0,
+   "Ne?"
+  ],
+  [
+   0.9,
+   "Vermiyor yani, görev vermiyor."
+  ],
+  [
+   11.4,
+   "Luksa nerede şu an?"
+  ],
+  [
+   13.4,
+   "Evde de seslere geliyor."
+  ],
+  [
+   16.7,
+   "Kan gidip dövseniz sporcuyu."
+  ],
+  [
+   18.5,
+   "Ya niye dövüyorsun oğlum sporcuyu?"
+  ],
+  [
+   19.8,
+   "Yok."
+  ],
+  [
+   20.3,
+   "Bir yerin oturmaya çalışmak için mi?"
+  ],
+  [
+   23.6,
+   "Şükür kıyafetlerini değiştirmişsin."
+  ],
+  [
+   28.2,
+   "Bu işi düzermez ben size söyleyeyim ben gideyim."
+  ],
+  [
+   30.2,
+   "Tamam, mendiye git."
+  ],
+  [
+   32.5,
+   "Alın bir."
+  ],
+  [
+   33.5,
+   "İleceğim ben."
+  ],
+  [
+   34.3,
+   "Ver birazla, ben o..."
+  ],
+  [
+   35.5,
+   "Sen bana da sakın verme."
+  ],
+  [
+   37.0,
+   "Ne yapayım?"
+  ],
+  [
+   38.0,
+   "Kopi."
+  ],
+  [
+   38.5,
+   "Ne yapayım?"
+  ],
+  [
+   39.0,
+   "Ne yapayım?"
+  ],
+  [
+   39.5,
+   "Ooo!"
+  ]
+ ],
+ "layout": "full",
+ "cam": null,
+ "fallback_title": "eray gta 6'da chat'i kopardı!!",
+ "dur": 40.0
+}
