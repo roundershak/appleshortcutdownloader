@@ -1,0 +1,75 @@
+{
+ "id": "20261123-211615",
+ "score": 2.65,
+ "peak": 0.03,
+ "base": 0.01,
+ "hype": 0.0,
+ "rage": 0.01,
+ "chat": [],
+ "speech": [
+  [
+   0.0,
+   "O kadar mı şey?"
+  ],
+  [
+   2.0,
+   "İparada değil mi?"
+  ],
+  [
+   4.0,
+   "Yok şu an şey yapmayacağım."
+  ],
+  [
+   6.0,
+   "Yani görevleri yapmayacağım."
+  ],
+  [
+   8.0,
+   "Deneyin mi?"
+  ],
+  [
+   10.0,
+   "Abi eleman ne konuştu ya?"
+  ],
+  [
+   12.0,
+   "Sus mu ya?"
+  ],
+  [
+   14.0,
+   "Şey yapsana."
+  ],
+  [
+   16.0,
+   "Yakın olanlara baksana."
+  ],
+  [
+   18.0,
+   "Hangi birine güzel şey oluyor."
+  ],
+  [
+   20.0,
+   "Hepsi pempe aslıyor."
+  ],
+  [
+   22.0,
+   "Esa'ydan pempe."
+  ],
+  [
+   24.0,
+   "Esa'ydan pempe."
+  ],
+  [
+   30.0,
+   "O zaman kötü olur ya."
+  ],
+  [
+   34.0,
+   "Göreğe bilsin çekeceğiz çet."
+  ]
+ ],
+ "layout": "full",
+ "cam": null,
+ "fallback_title": "eray gta 6'da chat'i güldürmekten öldürdü ASDKJASLDKJ",
+ "dur": 38.0
+}
