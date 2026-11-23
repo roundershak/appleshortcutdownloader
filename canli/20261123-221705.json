@@ -1,0 +1,55 @@
+{
+ "id": "20261123-221705",
+ "score": 0.879,
+ "peak": 0.07692307692307693,
+ "base": 0.15504807692307693,
+ "hype": 0.696969696969697,
+ "rage": 0.02857142857142857,
+ "chat": [
+  "Lan",
+  "OHA AQ",
+  "LAN",
+  "ben atıcam belki gireriz",
+  "yol ustu ugrim mi sanda kips",
+  "bune",
+  "OWWWWWWWWWWWW",
+  "LAN OHA SQ",
+  "OOOO",
+  "YA BIDE RAULA SOVUYON AMK",
+  "bune",
+  "OWWWWWWWWWWWW",
+  "LAN OHA SQ",
+  "OOOO",
+  "YA BIDE RAULA SOVUYON AMK"
+ ],
+ "speech": [
+  [
+   0.0,
+   "Mamie prompt gireceğim ama bir diğer gün anlamıyorum."
+  ],
+  [
+   8.9,
+   "Ne oluyor lan?"
+  ],
+  [
+   10.3,
+   "Ananı avradını."
+  ],
+  [
+   15.0,
+   "O adamın başına sürdüğü."
+  ],
+  [
+   28.6,
+   "Çok büyük bir zena zabı çekiyorum şu an."
+  ],
+  [
+   34.9,
+   "Ahmet, alsana solda olunca Eruyduk'un yok."
+  ]
+ ],
+ "layout": "full",
+ "cam": null,
+ "fallback_title": "eray gta 6'da böyle bir şey görmedi!!",
+ "dur": 40.0
+}
