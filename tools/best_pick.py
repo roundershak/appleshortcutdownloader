@@ -116,7 +116,8 @@ for y in d.glob("2*.yayin"):
         t0 = json.loads(y.read_text()).get("zaman", t0)
     except Exception:
         pass
-    if now - t0 < 20 * 3600 and k0 == "irl":
+    # TR takvim gunune gore say (UTC+3, gun 06:00'da donsun ki gece yayini ayni gune sayilsin)
+    if k0 == "irl" and time.strftime("%Y%m%d", time.gmtime(t0 + 3 * 3600 - 6 * 3600)) == time.strftime("%Y%m%d", time.gmtime(now + 3 * 3600 - 6 * 3600)):
         irl_done += 1
 cands = []
 for j in d.glob("2*.json"):
